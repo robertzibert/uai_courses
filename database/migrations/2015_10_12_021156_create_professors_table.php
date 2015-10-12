@@ -17,9 +17,9 @@ class CreateProfessorsTable extends Migration {
             $table->string('name');
 						$table->string('type');
 						$table->string('rut');
-						$table->decimal('annual_load', 2);
-						$table->decimal('min_load', 2);
-						$table->decimal('max_load', 2);
+						$table->double('annual_load',5, 2);
+						$table->double('min_load',5, 2);
+						$table->double('max_load',5, 2);
             $table->timestamps();
         });
 	}

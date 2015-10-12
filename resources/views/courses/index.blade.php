@@ -1,14 +1,16 @@
 @extends('master')
 @section('content')
 <h1>Cursos</h1>
-<table class = "table">
-	<th>Nombre</th>
-	<th>Código</th>
-	<th>Sección</th>
-	<th>Semestre</th>
-	<th>Sucursal</th>
-	<th>Carga</th>
-	<th>Horario</th>
+<table class = "table table-hover">
+	<thead>
+		<th>Nombre</th>
+		<th>Código</th>
+		<th>Sección</th>
+		<th>Semestre</th>
+		<th>Sucursal</th>
+		<th>Carga</th>
+		<th>Horario</th>	
+	</thead>
 	@foreach($courses as $course)
 
 		<tr>

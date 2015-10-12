@@ -38,12 +38,8 @@ class ProfessorController extends Controller {
 	 */
 	public function store(Request $request)
 	{
-		$professor = new Professor();
 
-		
-
-		$professor->save();
-
+		Professor::create($request->all());
 		return redirect()->route('professors.index')->with('message', 'Item created successfully.');
 	}
 
@@ -84,7 +80,7 @@ class ProfessorController extends Controller {
 	{
 		$professor = Professor::findOrFail($id);
 
-		
+
 
 		$professor->save();
 
