@@ -1,0 +1,6 @@
+/.vagrant
+/vendor
+
+.env
+Vagrantfile
+bootstrap.sh
