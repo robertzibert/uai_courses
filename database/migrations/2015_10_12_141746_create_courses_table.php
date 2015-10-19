@@ -14,13 +14,19 @@ class CreateCoursesTable extends Migration {
 	{
 		Schema::create('courses', function(Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
+						$table->integer('professor_id')->unsigned();
+						$table->string('name');
 						$table->string('code');
 						$table->string('section');
 						$table->string('semester');
 						$table->string('branch');
 						$table->double('load',5, 2);
 						$table->timestamps();
+
+						$table->foreign('professor_id')
+						 ->references('id')
+						 ->on('professors');
+
         });
 	}
 
@@ -31,6 +37,11 @@ class CreateCoursesTable extends Migration {
 	 */
 	public function down()
 	{
+		Schema::table('courses', function (Blueprint $table) {
+				 $table->dropForeign(['professor_id']);
+				 $table->dropColumn('professor_id');
+			 });
+
 		Schema::drop('courses');
 	}
 
