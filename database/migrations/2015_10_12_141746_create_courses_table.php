@@ -17,10 +17,9 @@ class CreateCoursesTable extends Migration {
             $table->string('name');
 						$table->string('code');
 						$table->string('section');
-						$table->integer('semester');
+						$table->string('semester');
 						$table->string('branch');
 						$table->double('load',5, 2);
-						$table->string('schedule');
 						$table->timestamps();
         });
 	}
