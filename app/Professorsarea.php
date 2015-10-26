@@ -4,15 +4,11 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Course extends Model
+class Professorsarea extends Model
 {
     protected $guarded = ['id'];
 
     public function professor(){
       return $this->belongsTo('\App\Professor');
     }
-    public function schedule(){
-      return $this->hasMany('\App\Schedules');
-    }
-
 }
