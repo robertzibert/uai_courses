@@ -17,3 +17,6 @@ Route::get('/', function () {
 
 Route::resource('professors', 'ProfessorController');
 Route::resource('courses', 'CourseController');
+Route::resource('tweets', 'TweetController');
+Route::get('/schedules/create/{area}', ['uses' =>'ScheduleController@create']);
+//Route::resource('schedules', 'ScheduleController');
