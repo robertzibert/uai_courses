@@ -9,9 +9,9 @@ class Schedule extends Model
     protected $guarded = ['id'];
 
     public function course(){
-      return $this->belongsTo('course');
+      return $this->belongsTo('\App\course');
     }
     public function professor(){
-      return $this->belongsTo('professor');
+      return $this->belongsTo('\App\professor');
     }
 }

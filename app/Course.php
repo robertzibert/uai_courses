@@ -12,7 +12,7 @@ class Course extends Model
       return $this->belongsTo('\App\Professor');
     }
     public function schedule(){
-      return $this->hasMany('\App\Schedules');
+      return $this->hasMany('\App\Schedule');
     }
 
 }
