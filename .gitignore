@@ -1,6 +1,6 @@
 /.vagrant
 /vendor
-
+/bower_components
 .env
 Vagrantfile
 bootstrap.sh
