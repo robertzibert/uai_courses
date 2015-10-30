@@ -39,7 +39,21 @@
 
     <li class="active"><a>Cursos</a></li>
      @foreach($arrayCourses as $course)
-        <li><a>{{$course['code']}}</a></li>
+        <li><a><table><tr><td width="80%">{{$course['code']}}</td>
+        @if($course['area']==$area)
+        <td>
+        <button type="submit" class="btn btn-default btn-xs">
+          <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+        </button></td><td>
+        {!! Form::open(['route' => ['destroyroute', $course['id'],$area,$professor->id], 'method' => 'delete', 'class'=>'form-inline']) !!}
+
+        <button type="submit" class="btn btn-default btn-xs">
+          <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+        </button>
+
+        {!! Form::close() !!}</td>
+        @endif
+        </tr></table></a></li>
      @endforeach
 </ul>
         </div>

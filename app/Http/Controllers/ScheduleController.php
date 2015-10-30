@@ -84,7 +84,7 @@ class ScheduleController extends Controller
                 $record->save();
             }
         }
-        return redirect("schedules/show/$area/$professor/");
+        return redirect("schedules/show/$area/$professor");
     }
 
     /**
@@ -112,6 +112,7 @@ class ScheduleController extends Controller
             $array[$schedule->schedule]=$schedule->course()->first()->code;
             $course['name']         = $schedule->course()->first()->name;
             $course['area']         = $schedule->course()->first()->area;
+            $course['id']         = $schedule->course()->first()->id;
             $course['schedule']     = $scheduleArray;
             $course['code']         = $code;
             $arrayCourses[$code]    = $course;
@@ -148,8 +149,9 @@ class ScheduleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id,$area,$professor)
     {
-        //
+        $schedules = schedule::where('course_id',$id)->delete();
+        return redirect("schedules/show/$area/$professor");
     }
 }
