@@ -13,10 +13,11 @@ class AddTeacherIdToShedulesTable extends Migration
     public function up()
     {
         Schema::table('schedules', function (Blueprint $table) {
-            $table->integer('professor_id')->unsigned();                           
+            $table->integer('professor_id')->unsigned();
+
             $table->foreign('professor_id')
-                         ->references('id')
-                         ->on('professors');
+                  ->references('id')
+                  ->on('professors');
         });
     }
 

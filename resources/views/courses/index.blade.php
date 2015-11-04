@@ -9,7 +9,8 @@
 		<th>Semestre</th>
 		<th>Sucursal</th>
 		<th>Carga</th>
-		<th>Horario</th>	
+		<th>Horario</th>
+		<th>Acciones</th>
 	</thead>
 	@foreach($courses as $course)
 
@@ -21,6 +22,8 @@
 			<td>{{$course->branch}}</td>
 			<td>{{$course->load}}</td>
 			<td>{{$course->schedule}}</td>
+			<td>{!! Html::actions($course->id) !!}</td> 
+
 		</tr>
 
 	@endforeach

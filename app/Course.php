@@ -11,8 +11,13 @@ class Course extends Model
     public function professor(){
       return $this->belongsTo('\App\Professor');
     }
+
     public function schedule(){
       return $this->hasMany('\App\Schedule');
+    }
+
+    public function area(){
+      return $this->belongsTo('\App\Area');
     }
 
 }

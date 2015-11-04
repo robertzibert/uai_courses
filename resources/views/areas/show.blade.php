@@ -1,12 +1,12 @@
 @extends('layout')
 @section('header')
 <div class="page-header">
-        <h1>Tweets / Show #{{$tweet->id}}</h1>
-        <form action="{{ route('tweets.destroy', $tweet->id) }}" method="POST" style="display: inline;" onsubmit="if(confirm('Delete? Are you sure?')) { return true } else {return false };">
+        <h1>Areas / Show #{{$area->id}}</h1>
+        <form action="{{ route('areas.destroy', $area->id) }}" method="POST" style="display: inline;" onsubmit="if(confirm('Delete? Are you sure?')) { return true } else {return false };">
             <input type="hidden" name="_method" value="DELETE">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <div class="btn-group pull-right" role="group" aria-label="...">
-                <a class="btn btn-warning btn-group" role="group" href="{{ route('tweets.edit', $tweet->id) }}"><i class="glyphicon glyphicon-edit"></i> Edit</a>
+                <a class="btn btn-warning btn-group" role="group" href="{{ route('areas.edit', $area->id) }}"><i class="glyphicon glyphicon-edit"></i> Edit</a>
                 <button type="submit" class="btn btn-danger">Delete <i class="glyphicon glyphicon-trash"></i></button>
             </div>
         </form>
@@ -23,16 +23,12 @@
                     <p class="form-control-static"></p>
                 </div>
                 <div class="form-group">
-                     <label for="title">TITLE</label>
-                     <p class="form-control-static">{{$tweet->title}}</p>
-                </div>
-                    <div class="form-group">
-                     <label for="body">BODY</label>
-                     <p class="form-control-static">{{$tweet->body}}</p>
+                     <label for="name">NAME</label>
+                     <p class="form-control-static">{{$area->name}}</p>
                 </div>
             </form>
 
-            <a class="btn btn-link" href="{{ route('tweets.index') }}"><i class="glyphicon glyphicon-backward"></i>  Back</a>
+            <a class="btn btn-link" href="{{ route('areas.index') }}"><i class="glyphicon glyphicon-backward"></i>  Back</a>
 
         </div>
     </div>

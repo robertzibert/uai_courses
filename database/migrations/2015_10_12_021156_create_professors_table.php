@@ -14,13 +14,14 @@ class CreateProfessorsTable extends Migration {
 	{
 		Schema::create('professors', function(Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
+						$table->string('name');
 						$table->string('type');
 						$table->string('rut');
 						$table->double('annual_load',5, 2);
 						$table->double('min_load',5, 2);
 						$table->double('max_load',5, 2);
             $table->timestamps();
+
         });
 	}
 

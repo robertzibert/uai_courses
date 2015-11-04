@@ -16,10 +16,11 @@ class CreateTeacherAreaTable extends Migration
             $table->increments('id');
             $table->string('area');
             $table->timestamps();
-            $table->integer('professor_id')->unsigned();                           
+            $table->integer('professor_id')->unsigned();
+
             $table->foreign('professor_id')
-                         ->references('id')
-                         ->on('professors');
+                  ->references('id')
+                  ->on('professors');
         });
     }
 

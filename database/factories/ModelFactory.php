@@ -11,6 +11,22 @@
 |
 */
 
+$areas = [
+            'TI',
+            'TALLER',
+            'OPERACIONES',
+            'OOCC',
+            'MIN',
+            'MAT',
+            'LAB',
+            'ING',
+            'FIS',
+            'EYM',
+            'EST',
+            'BIO',
+            '5TO AÑO',
+          ];
+
 $factory->define(App\User::class, function (Faker\Generator $faker) {
     return [
         'name' => $faker->name,
@@ -18,4 +34,11 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'password' => bcrypt(str_random(10)),
         'remember_token' => str_random(10),
     ];
+});
+
+$factory->define(App\Area::class, function (Faker\Generator $faker){
+    return [
+        'name' => $faker->unique()->randomElement($array = $areas) ,
+    ];
+
 });
