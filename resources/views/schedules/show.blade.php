@@ -19,7 +19,15 @@
         @endforeach
     @endforeach
     </style>
-
+    @if($errors->has())
+       @foreach ($errors->all() as $error)
+        <div class="alert alert-danger" role="alert">
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            <span class="sr-only">Error:</span>
+            {{ $error }}
+        </div>
+      @endforeach
+    @endif
     <div class="row">
 
         <div class="col-md-3">
@@ -28,7 +36,6 @@
                 <p><b>Nombre</b>: {{$professor->name}}</p>
                 <p><b>Tipo</b>: {{$professor->type}}</p>
                 <p><b>RUT</b>: {{$professor->rut}}</p>
-                <p><b>Carga Anual</b>: {{$professor->annual_load}}</p>
                 <p><b>Carga Maxima</b>: {{$professor->max_load}}</p>
                 <p><b>Carga Minima</b>: {{$professor->min_load}}</p>
                 <p><b>Carga Actual</b>: {{$professorLoad}}</p>
@@ -39,19 +46,15 @@
 
     <li class="active"><a>Cursos</a></li>
      @foreach($arrayCourses as $course)
-        <li><a><table><tr><td width="80%">{{$course['code']}}</td>
+        <li><a><table><tr><td width="80%">{{$course['code']."-".$course['section']}}</td>
         @if($course['area']==$area)
         <td>
-        <button type="submit" class="btn btn-default btn-xs">
-          <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-        </button></td><td>
-        {!! Form::open(['route' => ['destroyroute', $course['id'],$area,$professor->id], 'method' => 'delete', 'class'=>'form-inline']) !!}
-
-        <button type="submit" class="btn btn-default btn-xs">
-          <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-        </button>
-
-        {!! Form::close() !!}</td>
+            {!! Form::open(['route' => ['destroyroute', $course['id'],$area,$professor->id], 'method' => 'delete', 'class'=>'form-inline']) !!}
+                <button type="submit" class="btn btn-default btn-xs">
+                  <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                </button>
+            {!! Form::close() !!}
+        </td>
         @endif
         </tr></table></a></li>
      @endforeach
@@ -156,8 +159,19 @@
                   </tr>
                 </table>
             </div>
-            <a class="btn btn-default" href="{{ "/schedules/create/".$area."/".$professor->id }}"><i class="glyphicon glyphicon-plus"></i> Agregar Curso</a>
-
+            {!! Form::open(['url'=>'schedules'])!!}
+                <input type="hidden" name="professor" value={{$professor->id}}>
+                <input type="hidden" name="area" value={{$area}}>
+            <table class="table" border=0>
+            <tr><td>
+            {!! Form::select('course', $courseSelect,current($courseSelect),['class' => 'form-control', 'id'=>'courseSelect'])!!}
+            </td><td>
+                <button type="submit" class="btn btn-default btn-s">
+                  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>Agregar Curso
+                </button>
+            {!! Form::close() !!}
+            </td></tr>
+            </table>
         </div>
     </div>
 

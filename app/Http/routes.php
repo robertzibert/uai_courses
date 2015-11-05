@@ -20,6 +20,4 @@ Route::resource('courses', 'CourseController');
 Route::resource('tweets', 'TweetController');
 Route::delete('schedules/delete/{id}/{area}/{professor}',array('uses' => 'ScheduleController@destroy', 'as' => 'destroyroute'));
 Route::get('schedules/show/{area}/{professor}', ['uses' =>'ScheduleController@show']);
-Route::get('schedules/create/{area}/{professor}', ['uses' =>'ScheduleController@create']);
 Route::post('schedules', ['uses' =>'ScheduleController@store']);
-//Route::resource('schedules', 'ScheduleController');

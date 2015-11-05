@@ -27,40 +27,9 @@ class ScheduleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create($area,$professorId)
+    public function create()
     {
-        $professor          = Professor::FindOrFail($professorId);
-        $professorFromAreas = Professorsarea::where('area',$area)->get();
-        $professorLoad      = schedule::where('professor_id',$professorId)->count();
-        $arrayProfessors    = array();
-        $arrayCourses       = array();
-        $areaCourses        = Course::where('area',$area)->get();
-        foreach($professorFromAreas as $professorFromArea){
-            $arrayProfessors[$professorFromArea->professor()->first()->id]  = $professorFromArea->professor()->first()->name;
-        }
-        $schedules = Schedule::where('professor_id',$professorId)->get();
-        foreach($schedules as $schedule){
-            $course                 = array();
-            $code                   = $schedule->course()->first()->code;
-            $scheduleArray = (isset($arrayCourses[$code]['schedule']))?$arrayCourses[$code]['schedule']:'';
-            $scheduleArray[]        = $schedule->schedule;
-            $array[$schedule->schedule]=$schedule->course()->first()->code." semestre".$schedule->course()->first()->semester."<br><small>".$schedule->course()->first()->branch."</small>";
-            $course['name']         = $schedule->course()->first()->name;
-            $course['area']         = $schedule->course()->first()->area;
-            $course['schedule']     = $scheduleArray;
-            $course['code']         = $code;
-            $arrayCourses[$code]    = $course;
-        }
-        $courseSelect = array();
-        foreach($areaCourses as $oneCourse){
-            if(count($oneCourse->schedule()->groupBy('professor_id')->get()) == 0){
-                $courseSelect[$oneCourse->id] = $oneCourse->code."  ".$oneCourse->name." semestre".$oneCourse->semester." ".$oneCourse->branch;
-            }
-        }
-        foreach($areaCourses as $otherCourse){
-            $courseJson[$otherCourse->id] = $otherCourse->load;
-        }
-        return view('schedules.create', compact('professor','arrayCourses','arrayProfessors','array','area','courseSelect','areaCourses','courseJson','professorLoad'));
+       //
     }
 
     /**
@@ -71,18 +40,28 @@ class ScheduleController extends Controller
      */
     public function store(Request $request)
     {
-        $schedules = $request->get('schedules');
-        $course = $request->get('course');
-        $professor = $request->get('professor');
-        $area = $request->get('area');
-        if(isset($schedules)){
-            foreach($schedules as $schedule){
+        $course     = $request->get('course');
+        $professor  = $request->get('professor');
+        $area       = $request->get('area');
+
+        $schedules  = Schedule::where('professor_id',$professor)->get();
+        $hours      = array();
+        foreach($schedules as $schedule){
+            $hours  = array_merge(explode("-",$schedule->course()->first()->schedule),$hours);
+        }
+
+        $selectedCourseSchedule = explode("-",Course::where('id',$course)->first()->schedule);
+        foreach($selectedCourseSchedule as $oneSchedule){
+            if(in_array($oneSchedule,$hours)){
+                return redirect()->back()->withErrors('El curso seleccionado tiene tope de horario con uno de los ya existentes.')->withInput();;
+            }
+        }
+
+        if(isset($course) && isset($professor)){
                 $record = new Schedule;
                 $record->course_id = $course;
-                $record->schedule = $schedule;
                 $record->professor_id = $professor;
                 $record->save();
-            }
         }
         return redirect("schedules/show/$area/$professor");
     }
@@ -97,9 +76,17 @@ class ScheduleController extends Controller
     {
         $professor          = Professor::FindOrFail($professorId);
         $professorFromAreas = Professorsarea::where('area',$area)->get();
-        $professorLoad      = schedule::where('professor_id',$professorId)->count();
+        $professorLoad      = 0;
         $arrayProfessors    = array();
         $arrayCourses       = array();
+
+        $areaCourses        = Course::where('area',$area)->get();
+        $courseSelect       = array();
+        foreach($areaCourses as $oneCourse){
+            if(count($oneCourse->schedule()->groupBy('professor_id')->get()) == 0){
+                $courseSelect[$oneCourse->id] = $oneCourse->code."-".$oneCourse->section."-".$oneCourse->year." ".$oneCourse->branch." (".$oneCourse->schedule.")";
+            }
+        }
         foreach($professorFromAreas as $professorFromArea){
             $arrayProfessors[$professorFromArea->professor()->first()->id]  = $professorFromArea->professor()->first()->name;
         }
@@ -107,17 +94,21 @@ class ScheduleController extends Controller
         foreach($schedules as $schedule){
             $course                 = array();
             $code                   = $schedule->course()->first()->code;
-            $scheduleArray = (isset($arrayCourses[$code]['schedule']))?$arrayCourses[$code]['schedule']:'';
-            $scheduleArray[]        = $schedule->schedule;
-            $array[$schedule->schedule]=$schedule->course()->first()->code;
             $course['name']         = $schedule->course()->first()->name;
             $course['area']         = $schedule->course()->first()->area;
-            $course['id']         = $schedule->course()->first()->id;
-            $course['schedule']     = $scheduleArray;
+            $course['section']      = $schedule->course()->first()->section;
+            $course['semester']     = $schedule->course()->first()->semester;
+            $course['id']           = $schedule->course()->first()->id;
+            $course['year']         = $schedule->course()->first()->year;
+            $course['schedule']     = explode("-",$schedule->course()->first()->schedule);
             $course['code']         = $code;
-            $arrayCourses[$code]    = $course;
+            $arrayCourses[$code."-".$course['section']]    = $course;
+            $professorLoad = $professorLoad + count($course['schedule']);
+            foreach ($course['schedule'] as $horario) {
+                $array[$horario] = $course['code']."-".$course['section'];
+            }
         }
-        return view('schedules.show', compact('professor','arrayCourses','arrayProfessors','array','area','professorLoad'));
+        return view('schedules.show', compact('professor','courseSelect','arrayCourses','arrayProfessors','array','area','professorLoad'));
     }
 
     /**

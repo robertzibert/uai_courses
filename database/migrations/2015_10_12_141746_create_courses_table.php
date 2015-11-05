@@ -20,6 +20,7 @@ class CreateCoursesTable extends Migration {
 						$table->string('section');
 						$table->string('semester');
 						$table->string('branch');
+						$table->int('year');
 						$table->double('load',5, 2);
 						$table->timestamps();
 
