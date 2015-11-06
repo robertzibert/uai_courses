@@ -40,21 +40,52 @@ class ScheduleController extends Controller
      */
     public function store(Request $request)
     {
-        $course     = $request->get('course');
+        $course     = Course::where('id',$request->get('course'))->first();
         $professor  = $request->get('professor');
         $area       = $request->get('area');
+
+        $conflictHours = array(
+            "L1A"=>"L1B",
+            "M1A"=>"M1B",
+            "W1A"=>"W1B",
+            "J1A"=>"J1B",
+            "V1A"=>"V1B",
+            "L4A"=>"L4B",
+            "M4A"=>"M4B",
+            "W4A"=>"W4B",
+            "J4A"=>"J4B",
+            "V4A"=>"V4B",
+            );
+        $days=array(
+            "L"=>null,
+            "M"=>null,
+            "W"=>null,
+            "J"=>null,
+            "V"=>null,
+            );
 
         $schedules  = Schedule::where('professor_id',$professor)->get();
         $hours      = array();
         foreach($schedules as $schedule){
             $hours  = array_merge(explode("-",$schedule->course()->first()->schedule),$hours);
+            foreach($hours as $h){
+                $days[$h[0]]=$schedule->course()->first()->branch;
+            }
         }
-
-        $selectedCourseSchedule = explode("-",Course::where('id',$course)->first()->schedule);
+        foreach($conflictHours as $oneConflict => $otherOne){
+            if(in_array($oneConflict,$hours) || in_array($otherOne,$hours)){
+                array_push($hours, $otherOne);
+                array_push($hours, $oneConflict);
+            }
+        }
+        
+        $selectedCourseSchedule = explode("-",$course->schedule);
         foreach($selectedCourseSchedule as $oneSchedule){
             if(in_array($oneSchedule,$hours)){
                 return redirect()->back()->withErrors('El curso seleccionado tiene tope de horario con uno de los ya existentes.')->withInput();;
-            }
+            }elseif($days[$oneSchedule[0]]!=$course->branch){ 
+                return redirect()->back()->withErrors('El curso seleccionado tiene distinta sede que otro seleccionado para el mismo día.')->withInput();;
+             }
         }
 
         if(isset($course) && isset($professor)){

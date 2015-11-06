@@ -24,7 +24,7 @@
         <div class="alert alert-danger" role="alert">
             <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
             <span class="sr-only">Error:</span>
-            {{ $error }}
+            Error: {{ $error }}
         </div>
       @endforeach
     @endif
@@ -159,6 +159,7 @@
                   </tr>
                 </table>
             </div>
+            @if($courseSelect!=array())
             {!! Form::open(['url'=>'schedules'])!!}
                 <input type="hidden" name="professor" value={{$professor->id}}>
                 <input type="hidden" name="area" value={{$area}}>
@@ -172,6 +173,9 @@
             {!! Form::close() !!}
             </td></tr>
             </table>
+            @else
+            No se encontraron cursos disponibles para agregar.
+            @endif
         </div>
     </div>
 
