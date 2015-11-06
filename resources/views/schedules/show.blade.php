@@ -93,12 +93,12 @@
             <div class="table">
                 <table class="table" border=1>
                   <tr>
-                    <td></td>
-                    <td>L</td> 
-                    <td>M</td>
-                    <td>W</td>
-                    <td>J</td> 
-                    <td>V</td>
+                    <td>Bloque</td>
+                    <td>Lunes</td> 
+                    <td>Martes</td>
+                    <td>Miércoles</td>
+                    <td>Jueves</td> 
+                    <td>Viernes</td>
                   </tr>
                   <tr>
                     <td>1A</td>
