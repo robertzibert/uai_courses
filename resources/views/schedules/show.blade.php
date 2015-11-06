@@ -71,9 +71,9 @@
             No se encontraron cursos disponibles para agregar.
             @endif
      @foreach($arrayCourses as $course)
-        <li><a><table><tr><td class="col-md-3">{!!$course['code']."-".$course['section']." ".$course['branch']!!}</td>
+        <li><a><table><tr><td class="col-xs-11">{!!$course['code']."-".$course['section']." ".$course['branch']!!}</td>
         @if($course['area']==$area)
-        <td class="col-md-1">
+        <td class="col-xs-1">
             {!! Form::open(['route' => ['destroyroute', $course['id'],$area,$professor->id], 'method' => 'delete', 'class'=>'form-inline']) !!}
                 <button type="submit" class="btn btn-default btn-xs">
                   <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
