@@ -10,14 +10,16 @@
 | and give it the controller to call when that URI is requested.
 |
 */
-Route::get('/', ['uses' =>'ProfessorController@index']);
 
 
 Route::group(['middleware' => 'auth'], function () {
 
   Route::resource('professors', 'ProfessorController');
+  Route::resource('users', 'UserController');
   Route::resource('courses', 'CourseController');
   Route::resource('areas','AreaController');
+  Route::get('/', ['uses' =>'ProfessorController@index']);
+
 
 });
 

@@ -11,4 +11,8 @@ class Area extends Model
   public function courses(){
     return $this->hasMany('\App\Courses');
   }
+
+  public function professors(){
+    return $this->belongsToMany('\App\Courses');
+  }
 }

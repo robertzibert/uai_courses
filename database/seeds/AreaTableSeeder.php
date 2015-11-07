@@ -10,7 +10,6 @@ class AreaTableSeeder extends Seeder {
     public function run()
     {
       factory('App\Area', 3)->create();
-
     }
 
 }

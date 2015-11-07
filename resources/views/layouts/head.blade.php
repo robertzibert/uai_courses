@@ -16,6 +16,10 @@
 							<li class="{{  Request::segment(1) === 'courses' ? 'active' : '' }}">
 								<a href="{{ url('courses') }}">Cursos</a>
 							</li>
+							<li class="{{  Request::segment(1) === 'users' ? 'active' : '' }}">
+								<a href="{{ url('users') }}">Usuarios</a>
+							</li>
+
 						</ul>
 						<ul class="nav navbar-nav navbar-right">
 							<li class="dropdown">

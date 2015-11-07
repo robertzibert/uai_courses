@@ -11,7 +11,13 @@ class Professor extends Model
   public function schedule(){
     return $this->hasMany('App\schedule');
   }
+/*
   public function areas(){
     return $this->hasMany('App\professorsarea');
+  }
+*/
+
+  public function areas(){
+    return $this->belongsToMAny('App\Area');
   }
 }

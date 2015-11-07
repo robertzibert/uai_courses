@@ -28,6 +28,16 @@
 	{!! Form::input('number','max_load', null, ['class' => 'form-control',  'step' => 'any' ]) !!}
 </div>
 
+<div class="form-group col-md-4">
+	{!! Form::label('areas', 'Areas del profesor') !!}
+	@foreach($areas as $area)
+		{!! Form::checkbox('name', 'asd') !!}
+	@endforeach
+
+</div>
+
+
+
 <div class="form-group">
 	{!! Form::submit($submitButtonText, ['class' => 'btn btn-primary form-control']) !!}
 </div>

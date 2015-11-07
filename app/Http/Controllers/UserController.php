@@ -2,11 +2,11 @@
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use App\Area;
-use App\Professor;
+
+use App\User;
 use Illuminate\Http\Request;
 
-class ProfessorController extends Controller {
+class UserController extends Controller {
 
 	/**
 	 * Display a listing of the resource.
@@ -15,8 +15,9 @@ class ProfessorController extends Controller {
 	 */
 	public function index()
 	{
-		$professors = Professor::orderBy('id', 'desc')->paginate(10);
-		return view('professors.index', compact('professors'));
+		$users = User::all();
+
+		return view('users.index', compact('users'));
 	}
 
 	/**
@@ -26,9 +27,7 @@ class ProfessorController extends Controller {
 	 */
 	public function create()
 	{
-		$areas = Area::all();
-
-		return view('professors.create', compact('areas'));
+		return view('tweets.create');
 	}
 
 	/**
@@ -39,10 +38,14 @@ class ProfessorController extends Controller {
 	 */
 	public function store(Request $request)
 	{
+		$tweet = new Tweet();
 
-		Professor::create($request->all());
+		$tweet->title = $request->input("title");
+        $tweet->body = $request->input("body");
 
-		return redirect()->route('professors.index')->with('message', 'Item created successfully.');
+		$tweet->save();
+
+		return redirect()->route('tweets.index')->with('message', 'Item created successfully.');
 	}
 
 	/**
@@ -53,9 +56,9 @@ class ProfessorController extends Controller {
 	 */
 	public function show($id)
 	{
-		$professor = Professor::findOrFail($id);
+		$tweet = Tweet::findOrFail($id);
 
-		return view('professors.show', compact('professor'));
+		return view('tweets.show', compact('tweet'));
 	}
 
 	/**
@@ -66,9 +69,9 @@ class ProfessorController extends Controller {
 	 */
 	public function edit($id)
 	{
-		$professor = Professor::findOrFail($id);
+		$tweet = Tweet::findOrFail($id);
 
-		return view('professors.edit', compact('professor'));
+		return view('tweets.edit', compact('tweet'));
 	}
 
 	/**
@@ -80,13 +83,14 @@ class ProfessorController extends Controller {
 	 */
 	public function update(Request $request, $id)
 	{
-		$professor = Professor::findOrFail($id);
+		$tweet = Tweet::findOrFail($id);
 
+		$tweet->title = $request->input("title");
+        $tweet->body = $request->input("body");
 
+		$tweet->save();
 
-		$professor->save();
-
-		return redirect()->route('professors.index')->with('message', 'Item updated successfully.');
+		return redirect()->route('tweets.index')->with('message', 'Item updated successfully.');
 	}
 
 	/**
@@ -97,10 +101,10 @@ class ProfessorController extends Controller {
 	 */
 	public function destroy($id)
 	{
-		$professor = Professor::findOrFail($id);
-		$professor->delete();
+		$tweet = Tweet::findOrFail($id);
+		$tweet->delete();
 
-		return redirect()->route('professors.index')->with('message', 'Item deleted successfully.');
+		return redirect()->route('tweets.index')->with('message', 'Item deleted successfully.');
 	}
 
 }

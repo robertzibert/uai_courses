@@ -11,21 +11,6 @@
 |
 */
 
-$areas = [
-            'TI',
-            'TALLER',
-            'OPERACIONES',
-            'OOCC',
-            'MIN',
-            'MAT',
-            'LAB',
-            'ING',
-            'FIS',
-            'EYM',
-            'EST',
-            'BIO',
-            '5TO AÑO',
-          ];
 
 $factory->define(App\User::class, function (Faker\Generator $faker) {
     return [
@@ -37,6 +22,22 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
 });
 
 $factory->define(App\Area::class, function (Faker\Generator $faker){
+  $areas = [
+              'TI',
+              'TALLER',
+              'OPERACIONES',
+              'OOCC',
+              'MIN',
+              'MAT',
+              'LAB',
+              'ING',
+              'FIS',
+              'EYM',
+              'EST',
+              'BIO',
+              '5TO AÑO',
+            ];
+
     return [
         'name' => $faker->unique()->randomElement($array = $areas) ,
     ];
