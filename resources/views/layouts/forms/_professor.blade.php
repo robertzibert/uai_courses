@@ -1,14 +1,14 @@
-<div class="form-group">
+<div class="form-group col-md-12 ">
 	{!! Form::label('name', 'Nombre') !!}
 	{!! Form::text('name', null, ['class' => 'form-control']) !!}
 </div>
 
-<div class="form-group">
+<div class="form-group col-md-12 ">
 	{!! Form::label('type','Tipo') !!}
 	{!! Form::text('type', null, ['class' => 'form-control']) !!}
 </div>
 
-<div class="form-group">
+<div class="form-group col-md-12 ">
 	{!! Form::label('rut','RUT') !!}
 	{!! Form::text('rut', null, ['class' => 'form-control']) !!}
 </div>
@@ -28,16 +28,24 @@
 	{!! Form::input('number','max_load', null, ['class' => 'form-control',  'step' => 'any' ]) !!}
 </div>
 
-<div class="form-group col-md-4">
+<div class="form-group col-md-12 text-centered" data-toggle="buttons">
 	{!! Form::label('areas', 'Areas del profesor') !!}
-	@foreach($areas as $area)
-		{!! Form::checkbox('name', 'asd') !!}
-	@endforeach
+	<br>
+		@foreach($areas as $area)
+				<label class="btn btn-primary">
+					 {!! Form::checkbox('area[]', $area->id) !!}
+					<span class="glyphicon glyphicon-ok"></span>
+					{{$area->name}}
+				</label>
+
+		@endforeach
+
+
 
 </div>
 
 
 
-<div class="form-group">
+<div class="form-group col-md-12 ">
 	{!! Form::submit($submitButtonText, ['class' => 'btn btn-primary form-control']) !!}
 </div>

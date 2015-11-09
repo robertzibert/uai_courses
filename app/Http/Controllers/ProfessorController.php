@@ -40,7 +40,11 @@ class ProfessorController extends Controller {
 	public function store(Request $request)
 	{
 
-		Professor::create($request->all());
+		$areas     = $request->get('area');
+
+		$professor = Professor::create($request->except('area'));
+
+		$professor->areas()->attach($areas);
 
 		return redirect()->route('professors.index')->with('message', 'Item created successfully.');
 	}

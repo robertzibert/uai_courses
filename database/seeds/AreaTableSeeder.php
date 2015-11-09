@@ -9,7 +9,7 @@ class AreaTableSeeder extends Seeder {
 
     public function run()
     {
-      factory('App\Area', 3)->create();
+      factory('App\Area', 13)->create();
     }
 
 }
