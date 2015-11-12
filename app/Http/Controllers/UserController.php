@@ -27,7 +27,7 @@ class UserController extends Controller {
 	 */
 	public function create()
 	{
-		return view('tweets.create');
+		return view('users.create');
 	}
 
 	/**
@@ -38,14 +38,13 @@ class UserController extends Controller {
 	 */
 	public function store(Request $request)
 	{
-		$tweet = new Tweet();
-
-		$tweet->title = $request->input("title");
-        $tweet->body = $request->input("body");
-
-		$tweet->save();
-
-		return redirect()->route('tweets.index')->with('message', 'Item created successfully.');
+		$user =  User::create([
+				'name'     => $request->name,
+				'email'    => $request->email,
+				'password' => bcrypt($request->password),
+				'role_id'  => $request->role_id,
+		]);
+		return redirect()->route('users.index');
 	}
 
 	/**

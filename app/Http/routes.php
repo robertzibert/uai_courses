@@ -12,13 +12,21 @@
 */
 
 
+Route::group(['middleware' => ['auth','admin']], function () {
+
+  Route::resource('users', 'UserController');
+
+});
+
+
+
+
 Route::group(['middleware' => 'auth'], function () {
 
   Route::resource('professors', 'ProfessorController');
-  Route::resource('users', 'UserController');
   Route::resource('courses', 'CourseController');
   Route::resource('areas','AreaController');
-  Route::get('/', ['uses' =>'ProfessorController@index']);
+  Route::get('/', ['uses' =>'CourseController@dashboard']);
 
 
 });
@@ -36,5 +44,5 @@ Route::get('auth/logout', 'Auth\AuthController@getLogout');
 
 // Registration routes...
 Route::get('auth/register', 'Auth\AuthController@getRegister');
-Route::post('auth/register', 'Auth\AuthController@postRegister');
+Route::post('auth/register',['as' => 'auth.register', 'uses' =>'Auth\AuthController@postRegister' ]);
 //Route::resource('schedules', 'ScheduleController');

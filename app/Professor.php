@@ -17,6 +17,13 @@ class Professor extends Model
   }
 */
 
+    /**
+     * Get a tags lists associate with the post
+     */
+    public function scopeGetAreas(){
+      return $this->areas->lists('id')->toArray();
+    }
+
   public function areas(){
     return $this->belongsToMAny('App\Area');
   }

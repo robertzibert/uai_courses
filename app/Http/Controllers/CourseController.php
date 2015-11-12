@@ -101,4 +101,9 @@ class CourseController extends Controller {
 		return redirect()->route('courses.index')->with('message', 'Item deleted successfully.');
 	}
 
+	public function dashboard(){
+		$courses = Course::all();
+		return view('courses.dashboard', compact('courses'));
+	}
+
 }

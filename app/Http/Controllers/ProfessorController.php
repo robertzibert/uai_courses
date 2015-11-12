@@ -57,7 +57,7 @@ class ProfessorController extends Controller {
 	 */
 	public function show($id)
 	{
-		$professor = Professor::findOrFail($id);
+		$professor = Professor::with('areas')->findOrFail($id);
 
 		return view('professors.show', compact('professor'));
 	}
@@ -70,9 +70,11 @@ class ProfessorController extends Controller {
 	 */
 	public function edit($id)
 	{
-		$professor = Professor::findOrFail($id);
+		$professor = Professor::with('areas')->findOrFail($id);
 
-		return view('professors.edit', compact('professor'));
+		$areas = Area::all();
+
+		return view('professors.edit', compact('professor', 'areas'));
 	}
 
 	/**
