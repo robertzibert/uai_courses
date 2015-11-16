@@ -35,6 +35,7 @@ Route::group(['middleware' => 'auth'], function () {
 Route::get('/schedules/create/{area}', ['uses' =>'ScheduleController@create']);
 Route::delete('schedules/delete/{id}/{area}/{professor}',array('uses' => 'ScheduleController@destroy', 'as' => 'destroyroute'));
 
+
 Route::get('schedules/{date}/{area}/{professor}', ['uses' =>'ScheduleController@show']);
 Route::post('schedules', ['uses' =>'ScheduleController@store']);
 
