@@ -2,14 +2,13 @@
 @section('header')
 <div class="row">
 	<div class="col-md-12">
-		<h1>Asignación de horario para profesores</h1>
+		<h1>Asignación de horario para profesores, {{$year}} - {{$semester}}.</h1>
 	</div>
 </div>
 </hr>
 @endsection
 
 @section('content')
-    
     <style type="text/css">
     @foreach($arrayCourses as $course)
         @foreach($course['schedule'] as $horario)
@@ -19,60 +18,87 @@
         @endforeach
     @endforeach
     </style>
-
+    @if($errors->has())
+       @foreach ($errors->all() as $error)
+        <div class="alert alert-danger" role="alert">
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            <span class="sr-only">Error:</span>
+            Error: {{ $error }}
+        </div>
+      @endforeach
+    @endif
     <div class="row">
 
-        <div class="col-md-3">
+        <div class="col-md-4">
+        <a href="{{ URL::to($urlAnterior) }}">
+        <button class="btn btn-default btn-xs">
+          <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>Semestre anterior
+        </button>
+        <a href="{{ URL::to($urlSiguiente) }}">
+            <button class="btn btn-default btn-xs">
+              Siguiente Semestre<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+            </button>
+        </a>
             <div class="form-group">
-            <h4>
-                <p><b>Nombre</b>: {{$professor->name}}</p>
-                <p><b>Tipo</b>: {{$professor->type}}</p>
+            <h5>
+                <p><b>Nombre Profesor</b>: {{$professor->name}}</p>
+                <p><b>Disponibilidad</b>: {{$professor->type}}</p>
                 <p><b>RUT</b>: {{$professor->rut}}</p>
-                <p><b>Carga Anual</b>: {{$professor->annual_load}}</p>
-                <p><b>Carga Maxima</b>: {{$professor->max_load}}</p>
-                <p><b>Carga Minima</b>: {{$professor->min_load}}</p>
-                <p><b>Carga Actual</b>: {{$professorLoad}}</p>
-            </h4>
+                <p><b>Sede de Origen</b>: {{$professor->sede_origen}}</p>
+                <p><b>Carga Máxima</b>: {{$professor->max_load}} hrs.</p>
+                <p><b>Carga Mínima</b>: {{$professor->min_load}} hrs.</p>
+                <p><b>Carga Asignada</b>: {{$professorLoad}} hrs.</p>
+            </h5>
             </div>
         
      <ul class="nav nav-pills nav-stacked">
 
     <li class="active"><a>Cursos</a></li>
+            <br>
+                    @if($courseSelect!=array())
+            {!! Form::open(['url'=>'schedules'])!!}
+                <input type="hidden" name="professor" value={{$professor->id}}>
+                <input type="hidden" name="area" value={{$area}}>
+
+            <div>{!! Form::select('course', $courseSelect,current($courseSelect),['class' => 'btn btn-default dropdown-toggle', 'id'=>'courseSelect'])!!}
+   
+                <button type="submit" class="btn btn-default btn-s">
+                  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                </button>
+            </div>
+            {!! Form::close() !!}
+            @else
+            No se encontraron cursos disponibles para agregar.
+            @endif
      @foreach($arrayCourses as $course)
-        <li><a><table><tr><td width="80%">{{$course['code']}}</td>
+        <li><a><table><tr><td class="col-xs-11">{!!$course['code']."-".$course['section']." ".$course['branch']!!}</td>
         @if($course['area']==$area)
-        <td>
-        <button type="submit" class="btn btn-default btn-xs">
-          <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-        </button></td><td>
-        {!! Form::open(['route' => ['destroyroute', $course['id'],$area,$professor->id], 'method' => 'delete', 'class'=>'form-inline']) !!}
-
-        <button type="submit" class="btn btn-default btn-xs">
-          <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-        </button>
-
-        {!! Form::close() !!}</td>
+        <td class="col-xs-1">
+            {!! Form::open(['route' => ['destroyroute', $course['id'],$area,$professor->id], 'method' => 'delete', 'class'=>'form-inline']) !!}
+                <button type="submit" class="btn btn-default btn-xs">
+                  <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                </button>
+            {!! Form::close() !!}
+        </td>
         @endif
         </tr></table></a></li>
      @endforeach
 </ul>
         </div>
-        <div class="col-md-9">
-
+        <div class="col-md-7">  
             <form action="#">
                 {!! Form::select('professor', $arrayProfessors,$professor->id,['class' => 'form-control', 'id'=>'professorSelect',"onChange"=>"top.location.href=this.options[this.selectedIndex].value;"])!!}
                 <br>
-            </form>
-       
+            </form>     
             <div class="table">
                 <table class="table" border=1>
                   <tr>
-                    <td></td>
-                    <td>L</td> 
-                    <td>M</td>
-                    <td>W</td>
-                    <td>J</td> 
-                    <td>V</td>
+                    <td>Bloque</td>
+                    <td>Lunes</td> 
+                    <td>Martes</td>
+                    <td>Miércoles</td>
+                    <td>Jueves</td> 
+                    <td>Viernes</td>
                   </tr>
                   <tr>
                     <td>1A</td>
@@ -156,8 +182,6 @@
                   </tr>
                 </table>
             </div>
-            <a class="btn btn-default" href="{{ "/schedules/create/".$area."/".$professor->id }}"><i class="glyphicon glyphicon-plus"></i> Agregar Curso</a>
-
         </div>
     </div>
 

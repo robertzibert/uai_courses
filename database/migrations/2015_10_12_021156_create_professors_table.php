@@ -17,7 +17,7 @@ class CreateProfessorsTable extends Migration {
 						$table->string('name');
 						$table->string('type');
 						$table->string('rut');
-						$table->double('annual_load',5, 2);
+						$table->string('sede_origen');
 						$table->double('min_load',5, 2);
 						$table->double('max_load',5, 2);
             $table->timestamps();
