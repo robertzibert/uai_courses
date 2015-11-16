@@ -3,10 +3,10 @@
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-use App\Course;
+use App\User;
 use Illuminate\Http\Request;
 
-class CourseController extends Controller {
+class UserController extends Controller {
 
 	/**
 	 * Display a listing of the resource.
@@ -15,9 +15,9 @@ class CourseController extends Controller {
 	 */
 	public function index()
 	{
-		$courses = Course::orderBy('id', 'desc')->paginate(10);
+		$users = User::all();
 
-		return view('courses.index', compact('courses'));
+		return view('users.index', compact('users'));
 	}
 
 	/**
@@ -27,7 +27,7 @@ class CourseController extends Controller {
 	 */
 	public function create()
 	{
-		return view('courses.create');
+		return view('users.create');
 	}
 
 	/**
@@ -38,9 +38,13 @@ class CourseController extends Controller {
 	 */
 	public function store(Request $request)
 	{
-
-		Course::create($request->all());
-		return redirect()->route('courses.index')->with('message', 'Item created successfully.');
+		$user =  User::create([
+				'name'     => $request->name,
+				'email'    => $request->email,
+				'password' => bcrypt($request->password),
+				'role_id'  => $request->role_id,
+		]);
+		return redirect()->route('users.index');
 	}
 
 	/**
@@ -51,9 +55,9 @@ class CourseController extends Controller {
 	 */
 	public function show($id)
 	{
-		$course = Course::findOrFail($id);
+		$tweet = Tweet::findOrFail($id);
 
-		return view('courses.show', compact('course'));
+		return view('tweets.show', compact('tweet'));
 	}
 
 	/**
@@ -64,9 +68,9 @@ class CourseController extends Controller {
 	 */
 	public function edit($id)
 	{
-		$course = Course::findOrFail($id);
+		$tweet = Tweet::findOrFail($id);
 
-		return view('courses.edit', compact('course'));
+		return view('tweets.edit', compact('tweet'));
 	}
 
 	/**
@@ -78,13 +82,14 @@ class CourseController extends Controller {
 	 */
 	public function update(Request $request, $id)
 	{
-		$course = Course::findOrFail($id);
+		$tweet = Tweet::findOrFail($id);
 
+		$tweet->title = $request->input("title");
+        $tweet->body = $request->input("body");
 
+		$tweet->save();
 
-		$course->save();
-
-		return redirect()->route('courses.index')->with('message', 'Item updated successfully.');
+		return redirect()->route('tweets.index')->with('message', 'Item updated successfully.');
 	}
 
 	/**
@@ -95,15 +100,10 @@ class CourseController extends Controller {
 	 */
 	public function destroy($id)
 	{
-		$course = Course::findOrFail($id);
-		$course->delete();
+		$tweet = Tweet::findOrFail($id);
+		$tweet->delete();
 
-		return redirect()->route('courses.index')->with('message', 'Item deleted successfully.');
-	}
-
-	public function dashboard(){
-		$courses = Course::all();
-		return view('courses.dashboard', compact('courses'));
+		return redirect()->route('tweets.index')->with('message', 'Item deleted successfully.');
 	}
 
 }

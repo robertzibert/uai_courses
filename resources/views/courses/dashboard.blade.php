@@ -22,7 +22,7 @@
 			<td>{{$course->branch}}</td>
 			<td>{{$course->load}}</td>
 			<td>{{$course->schedule}}</td>
-			<td>{!! Html::actions($course->id) !!}</td> 
+			<td>{!! Html::actions($course->id) !!}</td>
 
 		</tr>
 

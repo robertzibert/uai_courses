@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTeacherAreaTable extends Migration
+class CreateRolesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,15 +12,10 @@ class CreateTeacherAreaTable extends Migration
      */
     public function up()
     {
-        Schema::create('professorsAreas', function(Blueprint $table) {
+        Schema::create('roles', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('area');
+            $table->text('name');
             $table->timestamps();
-            $table->integer('professor_id')->unsigned();
-
-            $table->foreign('professor_id')
-                  ->references('id')
-                  ->on('professors');
         });
     }
 
@@ -31,6 +26,6 @@ class CreateTeacherAreaTable extends Migration
      */
     public function down()
     {
-        Schema::drop('professorsAreas');
+        Schema::drop('roles');
     }
 }

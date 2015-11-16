@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTweetsTable extends Migration {
+class CreateAreasTable extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -12,10 +12,9 @@ class CreateTweetsTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('tweets', function(Blueprint $table) {
+		Schema::create('areas', function(Blueprint $table) {
             $table->increments('id');
-            $table->string('title')->default('Tweet #1');
-            $table->text('body');
+            $table->string('name');
             $table->timestamps();
         });
 	}
@@ -27,7 +26,7 @@ class CreateTweetsTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('tweets');
+		Schema::drop('areas');
 	}
 
 }

@@ -2,7 +2,7 @@
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-
+use App\Area;
 use App\Professor;
 use Illuminate\Http\Request;
 
@@ -16,7 +16,6 @@ class ProfessorController extends Controller {
 	public function index()
 	{
 		$professors = Professor::orderBy('id', 'desc')->paginate(10);
-
 		return view('professors.index', compact('professors'));
 	}
 
@@ -27,7 +26,9 @@ class ProfessorController extends Controller {
 	 */
 	public function create()
 	{
-		return view('professors.create');
+		$areas = Area::all();
+
+		return view('professors.create', compact('areas'));
 	}
 
 	/**
@@ -39,7 +40,12 @@ class ProfessorController extends Controller {
 	public function store(Request $request)
 	{
 
-		Professor::create($request->all());
+		$areas     = $request->get('area');
+
+		$professor = Professor::create($request->except('area'));
+
+		$professor->areas()->attach($areas);
+
 		return redirect()->route('professors.index')->with('message', 'Item created successfully.');
 	}
 
@@ -51,7 +57,7 @@ class ProfessorController extends Controller {
 	 */
 	public function show($id)
 	{
-		$professor = Professor::findOrFail($id);
+		$professor = Professor::with('areas')->findOrFail($id);
 
 		return view('professors.show', compact('professor'));
 	}
@@ -64,9 +70,11 @@ class ProfessorController extends Controller {
 	 */
 	public function edit($id)
 	{
-		$professor = Professor::findOrFail($id);
+		$professor = Professor::with('areas')->findOrFail($id);
 
-		return view('professors.edit', compact('professor'));
+		$areas = Area::all();
+
+		return view('professors.edit', compact('professor', 'areas'));
 	}
 
 	/**

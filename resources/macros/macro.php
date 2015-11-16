@@ -5,14 +5,17 @@ Html::macro('actions', function($id)
     $object = Request::segment(1);
 
     return
-    '<a class="btn btn-xs btn-primary" href="'.route($object.'.show', $id).'">
-      <i class="glyphicon glyphicon-eye-open"></i> View
-     </a>
-     <a class="btn btn-xs btn-warning" href="'.route($object.'.edit', $id).'">
-       <i class="glyphicon glyphicon-edit"></i> Edit</a>'.
 
-       Form::open(['route' => [$object.'.destroy', $id], 'method' => 'delete']).
-       Html::customButton('btn btn-xs btn-danger', 'glyphicon glyphicon-trash', 'Delete').
+       Form::open(['route' => [$object.'.destroy', $id], 'method' => 'delete', 'class' => 'form-inline']).
+
+      '<a class="btn btn-xs btn-primary" href="'.route($object.'.show', $id).'">
+         <i class="glyphicon glyphicon-eye-open"></i> View
+        </a>
+
+       <a class="btn btn-xs btn-warning" href="'.route($object.'.edit', $id).'">
+         <i class="glyphicon glyphicon-edit"></i> Edit
+         </a>'
+       .Html::customButton('btn btn-xs btn-danger', 'glyphicon glyphicon-trash', 'Delete').
        Form::close();
 
 });

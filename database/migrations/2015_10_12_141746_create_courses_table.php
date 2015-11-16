@@ -15,6 +15,7 @@ class CreateCoursesTable extends Migration {
 		Schema::create('courses', function(Blueprint $table) {
             $table->increments('id');
 						$table->integer('professor_id')->unsigned()->nullable();
+						$table->integer('area_id')->unsigned()->nullable();
 						$table->string('name');
 						$table->string('code');
 						$table->string('section');
@@ -26,6 +27,10 @@ class CreateCoursesTable extends Migration {
 						$table->foreign('professor_id')
 						 ->references('id')
 						 ->on('professors');
+
+						$table->foreign('area_id')
+							->references('id')
+							->on('areas');
 
         });
 	}

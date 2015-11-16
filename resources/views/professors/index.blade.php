@@ -11,7 +11,7 @@
 		<th>Carga Máxima</th>
 		<th>Acciones</th>
 	</thead>
-	@foreach($professors as $professor)
+	@forelse($professors as $professor)
 		<tr>
 			<td>{{$professor->name}}</td>
 			<td>{{$professor->type}}</td>
@@ -23,8 +23,11 @@
 				{!! Html::actions($professor->id) !!}
 			</td>
 		</tr>
-
-	@endforeach
+	@empty
+	<tr>
+		<td>Aún no hay profesores</td>
+  </tr>
+	@endforelse
 </table>
 <a href="/professors/create" class ="btn btn-success"> Registrar Profesor </a>
 

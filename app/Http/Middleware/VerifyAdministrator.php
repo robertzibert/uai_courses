@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
 
-class RedirectIfAuthenticated
+class VerifyAdministrator
 {
     /**
      * The Guard implementation.
@@ -34,10 +34,13 @@ class RedirectIfAuthenticated
      */
     public function handle($request, Closure $next)
     {
-        if ($this->auth->check()) {
-            return redirect('/courses');
-        }
-
+        if ($this->auth->user()->role_id != 1) {
+            if ($request->ajax()) {
+                return response('Unauthorized.', 401);
+            } else {
+                return App::error(503);
+                };
+            }
         return $next($request);
     }
 }

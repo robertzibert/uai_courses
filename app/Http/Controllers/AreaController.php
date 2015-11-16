@@ -3,10 +3,10 @@
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-use App\Course;
+use App\Area;
 use Illuminate\Http\Request;
 
-class CourseController extends Controller {
+class AreaController extends Controller {
 
 	/**
 	 * Display a listing of the resource.
@@ -15,9 +15,9 @@ class CourseController extends Controller {
 	 */
 	public function index()
 	{
-		$courses = Course::orderBy('id', 'desc')->paginate(10);
+		$areas = Area::orderBy('id', 'desc')->paginate(10);
 
-		return view('courses.index', compact('courses'));
+		return view('areas.index', compact('areas'));
 	}
 
 	/**
@@ -27,7 +27,7 @@ class CourseController extends Controller {
 	 */
 	public function create()
 	{
-		return view('courses.create');
+		return view('areas.create');
 	}
 
 	/**
@@ -38,9 +38,13 @@ class CourseController extends Controller {
 	 */
 	public function store(Request $request)
 	{
+		$area = new Area();
 
-		Course::create($request->all());
-		return redirect()->route('courses.index')->with('message', 'Item created successfully.');
+		
+
+		$area->save();
+
+		return redirect()->route('areas.index')->with('message', 'Item created successfully.');
 	}
 
 	/**
@@ -51,9 +55,9 @@ class CourseController extends Controller {
 	 */
 	public function show($id)
 	{
-		$course = Course::findOrFail($id);
+		$area = Area::findOrFail($id);
 
-		return view('courses.show', compact('course'));
+		return view('areas.show', compact('area'));
 	}
 
 	/**
@@ -64,9 +68,9 @@ class CourseController extends Controller {
 	 */
 	public function edit($id)
 	{
-		$course = Course::findOrFail($id);
+		$area = Area::findOrFail($id);
 
-		return view('courses.edit', compact('course'));
+		return view('areas.edit', compact('area'));
 	}
 
 	/**
@@ -78,13 +82,13 @@ class CourseController extends Controller {
 	 */
 	public function update(Request $request, $id)
 	{
-		$course = Course::findOrFail($id);
+		$area = Area::findOrFail($id);
 
+		
 
+		$area->save();
 
-		$course->save();
-
-		return redirect()->route('courses.index')->with('message', 'Item updated successfully.');
+		return redirect()->route('areas.index')->with('message', 'Item updated successfully.');
 	}
 
 	/**
@@ -95,15 +99,10 @@ class CourseController extends Controller {
 	 */
 	public function destroy($id)
 	{
-		$course = Course::findOrFail($id);
-		$course->delete();
+		$area = Area::findOrFail($id);
+		$area->delete();
 
-		return redirect()->route('courses.index')->with('message', 'Item deleted successfully.');
-	}
-
-	public function dashboard(){
-		$courses = Course::all();
-		return view('courses.dashboard', compact('courses'));
+		return redirect()->route('areas.index')->with('message', 'Item deleted successfully.');
 	}
 
 }
