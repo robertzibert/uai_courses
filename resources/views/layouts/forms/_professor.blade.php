@@ -32,7 +32,7 @@
 	{!! Form::label('areas', 'Areas del profesor') !!}
 	<br>
 		@foreach($areas as $area)
-			@if(in_array($area->id, $professor->getAreas()))
+			@if(isset($professor) && in_array($area->id, $professor->getAreas()))
 				<label class="btn btn-primary active">
 			@else
 				<label class="btn btn-primary">
