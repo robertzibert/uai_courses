@@ -1,9 +1,9 @@
 @extends('master')
 @section('header')
 <div class="row">
-	<div class="col-md-12">
-		<h1>Asignación de horario para profesores, {{$year}} - {{$semester}}.</h1>
-	</div>
+    <div class="col-md-12">
+        <h1>Asignación de horario para profesores, {{$year}} - {{$semester}}.</h1>
+    </div>
 </div>
 </hr>
 @endsection

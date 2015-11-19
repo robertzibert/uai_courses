@@ -24,8 +24,18 @@
 </div>
 
 <div class="form-group">
-	{!! Form::label('load', 'Carga') !!}
-	{!! Form::input('number', 'load', null, ['class' => 'form-control']) !!}
+	{!! Form::label('year', 'Año') !!}
+	{!! Form::input('number', 'year', null, ['class' => 'form-control']) !!}
+</div>
+
+<div class="form-group">
+	{!! Form::label('schedule', 'Horario') !!}
+	{!! Form::text('schedule', null, ['class' => 'form-control']) !!}
+</div>
+
+<div class="form-group">
+	{!! Form::label('area', 'Area') !!}
+	{!! Form::text('area', null, ['class' => 'form-control']) !!}
 </div>
 
 <div class="form-group">

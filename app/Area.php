@@ -9,10 +9,10 @@ class Area extends Model
   protected $guarded = ['id'];
 
   public function courses(){
-    return $this->hasMany('\App\Courses');
+    return $this->hasMany('\App\Course');
   }
 
   public function professors(){
-    return $this->belongsToMany('\App\Courses');
+    return $this->belongsToMany('\App\Professor');
   }
 }

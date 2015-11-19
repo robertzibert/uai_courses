@@ -8,8 +8,8 @@
 		<th>Sección</th>
 		<th>Semestre</th>
 		<th>Sucursal</th>
-		<th>Carga</th>
 		<th>Horario</th>
+		<th>Area</th>
 		<th>Acciones</th>
 	</thead>
 	@foreach($courses as $course)
@@ -20,8 +20,8 @@
 			<td>{{$course->section}}</td>
 			<td>{{$course->semester}}</td>
 			<td>{{$course->branch}}</td>
-			<td>{{$course->load}}</td>
 			<td>{{$course->schedule}}</td>
+			<td>{{$course->area}}</td>
 			<td>{!! Html::actions($course->id) !!}</td> 
 
 		</tr>

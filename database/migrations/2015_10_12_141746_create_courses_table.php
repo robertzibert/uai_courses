@@ -21,7 +21,8 @@ class CreateCoursesTable extends Migration {
 						$table->string('section');
 						$table->string('semester');
 						$table->string('branch');
-						$table->int('year');
+						$table->string('schedule');
+						$table->integer('year');
 						$table->timestamps();
 
 						$table->foreign('professor_id')

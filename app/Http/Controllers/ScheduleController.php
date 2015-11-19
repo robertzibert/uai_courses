@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Course;
 use App\Professor;
 use App\Schedule;
+use App\Area;
 use App\Professorsarea;
 
 class ScheduleController extends Controller
@@ -43,8 +44,8 @@ class ScheduleController extends Controller
         $course     = Course::where('id',$request->get('course'))->first();
         $professor     = Professor::where('id',$request->get('professor'))->first();
         $area       = $request->get('area');
-        $schedulesYear =Schedule::where('professor_id',$professor->id)
-                        ->join('courses', 'courses.id', '=', 'schedules.course_id')
+        $schedulesYear =Schedule::join('courses', 'courses.id', '=', 'schedules.course_id')
+                        ->where('schedules.professor_id',$professor->id)
                         ->where('courses.year',$course->year)
                         ->get();
         $professorLoad=0;
@@ -82,7 +83,6 @@ class ScheduleController extends Controller
                         $days[$h[0]]=$courseSchedule->branch;
                     }
                 }
-
             }
         }
         foreach($conflictHours as $oneConflict => $otherOne){
@@ -122,7 +122,7 @@ class ScheduleController extends Controller
         $year       = $dateExp[0];
         $semester   = $dateExp[1];
         $professor          = Professor::FindOrFail($professorId);
-        $professorFromAreas = Professorsarea::where('area',$area)->get();
+        $professorFromAreas = Area::where('name', $area)->first()->professors()->get();
         $professorLoad      = 0;
         $arrayProfessors    = array();
         $arrayCourses       = array();
@@ -135,10 +135,10 @@ class ScheduleController extends Controller
             }
         }
         foreach($professorFromAreas as $professorFromArea){
-            $arrayProfessors[$professorFromArea->professor()->first()->id]  = $professorFromArea->professor()->first()->name;
+            $arrayProfessors[$professorFromArea->id]  = $professorFromArea->name;
         }
-        $schedules =    Schedule::where('professor_id',$professorId)
-                        ->join('courses', 'courses.id', '=', 'schedules.course_id')
+        $schedules =    Schedule::join('courses', 'courses.id', '=', 'schedules.course_id')
+                        ->where('schedules.professor_id',$professorId)
                         ->where('courses.year',$year)
                         ->where('courses.semester',$semester)
                         ->get();
@@ -160,8 +160,8 @@ class ScheduleController extends Controller
                 $array[$horario] = $course['code']."-".$course['section'];
             }
         }
-        $schedulesYear =Schedule::where('professor_id',$professorId)
-                        ->join('courses', 'courses.id', '=', 'schedules.course_id')
+        $schedulesYear =Schedule::join('courses', 'courses.id', '=', 'schedules.course_id')
+                        ->where('schedules.professor_id',$professorId)
                         ->where('courses.year',$year)
                         ->get();
         foreach($schedulesYear as $sche){

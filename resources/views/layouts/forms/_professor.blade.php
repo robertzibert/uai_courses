@@ -13,9 +13,9 @@
 	{!! Form::text('rut', null, ['class' => 'form-control']) !!}
 </div>
 
-<div class="form-group col-md-4">
-	{!! Form::label('annual_load','Carga Anual') !!}
-	{!! Form::input('number','annual_load', null, ['class' => 'form-control',  'step' => 'any']) !!}
+<div class="form-group col-md-12 ">
+	{!! Form::label('sede_origen','Sede de Origen') !!}
+	{!! Form::text('sede_origen', null, ['class' => 'form-control']) !!}
 </div>
 
 <div class="form-group col-md-4">
