@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
+
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -17,9 +19,14 @@ class ScheduleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($professorId)
+    public function index()
     {
-        return('asd');
+      $user      = Auth::user()->with('role')->first();
+      $split     = explode(" ", $user->role->name);
+      $role_area = $split[count($split)-1];
+
+      return view('schedules.index');
+
     }
 
     /**

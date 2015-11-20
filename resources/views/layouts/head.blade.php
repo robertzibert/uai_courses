@@ -7,8 +7,8 @@
 				@if(Auth::check())
 				<div id="navbar" class="collapse navbar-collapse">
 						<ul class="nav navbar-nav">
-							<li class="{{ Request::is('/') ? 'active' : '' }}">
-								<a href="{{ url('/') }}">Home</a>
+							<li class="{{ Request::is('dashboard') ? 'active' : '' }}">
+								<a href="{{ url('/dashboard') }}">Dashboard</a>
 							</li>
 							<li class="{{  Request::segment(1) === 'professors' ? 'active' : '' }}">
 								<a href="{{ url('professors') }}">Profesores</a>
