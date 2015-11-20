@@ -15,4 +15,9 @@ class Area extends Model
   public function professors(){
     return $this->belongsToMany('\App\Professor');
   }
+
+  public function scopeGetAreas(){
+    return $this->orderBy('complete_name', 'ASC')->lists('complete_name', 'id');
+  }
+
 }

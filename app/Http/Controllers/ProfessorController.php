@@ -88,8 +88,6 @@ class ProfessorController extends Controller {
 	{
 		$professor = Professor::findOrFail($id);
 
-
-
 		$professor->save();
 
 		return redirect()->route('professors.index')->with('message', 'Item updated successfully.');

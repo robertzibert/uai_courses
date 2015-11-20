@@ -4,6 +4,8 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\Course;
+use App\Area;
+
 use Illuminate\Http\Request;
 
 class CourseController extends Controller {
@@ -15,7 +17,7 @@ class CourseController extends Controller {
 	 */
 	public function index()
 	{
-		$courses = Course::orderBy('id', 'desc')->paginate(10);
+		$courses = Course::with('area')->get();
 
 		return view('courses.index', compact('courses'));
 	}
@@ -27,7 +29,8 @@ class CourseController extends Controller {
 	 */
 	public function create()
 	{
-		return view('courses.create');
+		$areas = Area::getAreas();
+		return view('courses.create', compact('areas'));
 	}
 
 	/**
@@ -39,7 +42,8 @@ class CourseController extends Controller {
 	public function store(Request $request)
 	{
 
-		Course::create($request->all());
+		$course = Course::create($request->all());
+
 		return redirect()->route('courses.index')->with('message', 'Item created successfully.');
 	}
 
@@ -51,8 +55,8 @@ class CourseController extends Controller {
 	 */
 	public function show($id)
 	{
-		$course = Course::findOrFail($id);
 
+		$course = Course::findOrFail($id);
 		return view('courses.show', compact('course'));
 	}
 
@@ -66,7 +70,9 @@ class CourseController extends Controller {
 	{
 		$course = Course::findOrFail($id);
 
-		return view('courses.edit', compact('course'));
+		$areas = Area::getAreas();
+
+		return view('courses.edit', compact('course', 'areas'));
 	}
 
 	/**
@@ -79,8 +85,6 @@ class CourseController extends Controller {
 	public function update(Request $request, $id)
 	{
 		$course = Course::findOrFail($id);
-
-
 
 		$course->save();
 

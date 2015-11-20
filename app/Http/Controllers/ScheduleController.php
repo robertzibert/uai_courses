@@ -22,11 +22,21 @@ class ScheduleController extends Controller
      */
     public function index()
     {
-      $user      = Auth::user()->with('role')->first();
-      $split     = explode(" ", $user->role->name);
+      $user      = Auth::user();
+      $split     = explode(" ", $user->role()->first()->name);
       $role_area = $split[count($split)-1];
 
-      return view('schedules.index');
+      $area = Area::where('name', $role_area)->first();
+
+      $unasigned = Course::where('taken', 0)->where('area_id', $area->id)->get();
+      $asigned   = Course::where('taken', 1)->where('area_id', $area->id)->get();
+
+      if($user->role()->first()->name == 'Administrador'){
+        $unasigned = Course::where('taken', 0)->get();
+        $asigned   = Course::where('taken', 1)->get();
+      }
+
+      return view('schedules.index', compact('unasigned', 'asigned'));
 
     }
 
@@ -102,7 +112,7 @@ class ScheduleController extends Controller
         foreach($selectedCourseSchedule as $oneSchedule){
             if(in_array($oneSchedule,$hours)){
                 return redirect()->back()->withErrors('El curso seleccionado tiene tope de horario con otro curso ya asignado.')->withInput();;
-            }elseif($days[$oneSchedule[0]]!=$course->branch && $days[$oneSchedule[0]]!=null){ 
+            }elseif($days[$oneSchedule[0]]!=$course->branch && $days[$oneSchedule[0]]!=null){
                 return redirect()->back()->withErrors('No es posible asignar dos cursos con distintas sedes el mismo día.')->withInput();;
             }elseif($professorLoad + count($selectedCourseSchedule)*22.5 > $professor->max_load){
                 return redirect()->back()->withErrors('Añadir este curso excede la carga máxima del profesor seleccionado.')->withInput();;

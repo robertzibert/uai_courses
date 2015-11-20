@@ -11,11 +11,11 @@
  <div class="tab-content well">
    <div id="unasigned" class="tab-pane fade in active">
      <h3>Cursos sin Asignar</h3>
-     @include('layouts.tables._schedules', ['id' => 'dataTable'])
+     @include('layouts.tables._schedules', ['id' => 'dataTable', 'courses' => $unasigned])
    </div>
    <div id="asigned" class="tab-pane fade">
      <h3>Cursos Asignados</h3>
-     @include('layouts.tables._schedules', ['id' => 'dataTable1'])
+     @include('layouts.tables._schedules', ['id' => 'dataTable1', 'courses' => $asigned])
    </div>
  </div>
 

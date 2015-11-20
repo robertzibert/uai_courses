@@ -21,8 +21,8 @@
 			<td>{{$course->semester}}</td>
 			<td>{{$course->branch}}</td>
 			<td>{{$course->schedule}}</td>
-			<td>{{$course->area}}</td>
-			<td>{!! Html::actions($course->id) !!}</td> 
+			<td>{{$course->area()->first()->complete_name}}</td>
+			<td>{!! Html::actions($course->id) !!}</td>
 
 		</tr>
 

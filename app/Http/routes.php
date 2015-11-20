@@ -49,3 +49,21 @@ Route::get('auth/logout', 'Auth\AuthController@getLogout');
 Route::get('auth/register', 'Auth\AuthController@getRegister');
 Route::post('auth/register',['as' => 'auth.register', 'uses' =>'Auth\AuthController@postRegister' ]);
 
+Route::get('/test', function(){
+  $areas = [
+              ['name' => 'TI', 'complete_name' => 'Informática'],
+              ['name' => 'TALLER', 'complete_name' => 'Taller'],
+              ['name' => 'OPERACIONES', 'complete_name' => 'Operaciones'],
+              ['name' => 'OOCC', 'complete_name' => 'Oocc'],
+              ['name' => 'MIN', 'complete_name' => 'Minería'],
+              ['name' => 'MAT', 'complete_name' => 'Matemática'],
+              ['name' => 'LAB', 'complete_name' => 'Laboratorio'],
+              ['name' => 'ING', 'complete_name' => 'Ingeniería'],
+              ['name' => 'FIS', 'complete_name' => 'Física'],
+              ['name' => 'EYM', 'complete_name' => 'Eym'],
+              ['name' => 'EST', 'complete_name' => 'Estadística'],
+              ['name' => 'BIO', 'complete_name' => 'Bioingeniería'],
+              ['name' => '5TO AÑO', 'complete_name' => 'Quinto Año'],
+            ];
+return $areas;
+});

@@ -16,10 +16,12 @@
 							<li class="{{  Request::segment(1) === 'courses' ? 'active' : '' }}">
 								<a href="{{ url('courses') }}">Cursos</a>
 							</li>
+
+						@if(Auth::user()->role->name == 'Administrador')
 							<li class="{{  Request::segment(1) === 'users' ? 'active' : '' }}">
 								<a href="{{ url('users') }}">Usuarios</a>
 							</li>
-
+						@endif
 						</ul>
 						<ul class="nav navbar-nav navbar-right">
 							<li class="dropdown">

@@ -34,15 +34,13 @@
 </div>
 
 <div class="form-group">
-	{!! Form::label('area', 'Area') !!}
-	{!! Form::text('area', null, ['class' => 'form-control']) !!}
+	{!! Form::label('area_id', 'Área') !!}
+	{!! Form::select('area_id', $areas ,  null, ['class' => 'form-control']) !!}
 </div>
-
 
 <div class="form-group">
 	{!! Form::label('load', 'Carga') !!}
 	{!! Form::input('number', 'load', null, ['class' => 'form-control']) !!}
->>>>>>> course_registration
 </div>
 
 <div class="form-group">
