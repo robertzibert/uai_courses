@@ -26,7 +26,7 @@ Route::group(['middleware' => 'auth'], function () {
   Route::resource('professors', 'ProfessorController');
   Route::resource('courses', 'CourseController');
   Route::resource('areas','AreaController');
-  Route::get('/', ['uses' =>'CourseController@dashboard']);
+  Route::get('/', ['uses' =>'ScheduleController@index']);
 
 
 });

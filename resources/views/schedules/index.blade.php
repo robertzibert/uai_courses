@@ -8,7 +8,7 @@
    <li><a data-toggle="pill" href="#asigned">Asignados</a></li>
  </ul>
 
- <div class="tab-content">
+ <div class="tab-content well">
    <div id="unasigned" class="tab-pane fade in active">
      <h3>Cursos sin Asignar</h3>
      @include('layouts.tables._schedules', ['id' => 'dataTable'])
