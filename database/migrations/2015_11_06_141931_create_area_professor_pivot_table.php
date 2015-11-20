@@ -28,6 +28,13 @@ class CreateAreaProfessorPivotTable extends Migration
      */
     public function down()
     {
+        Schema::table('area_professor', function (Blueprint $table) {
+           $table->dropForeign(['professor_id']);
+           $table->dropForeign(['area_id']);
+         });
+
+
         Schema::drop('area_professor');
+
     }
 }
