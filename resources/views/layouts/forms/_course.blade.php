@@ -38,6 +38,18 @@
 	{!! Form::text('area', null, ['class' => 'form-control']) !!}
 </div>
 
+
+<div class="form-group">
+	{!! Form::label('load', 'Carga') !!}
+	{!! Form::input('number', 'load', null, ['class' => 'form-control']) !!}
+>>>>>>> course_registration
+</div>
+
+<div class="form-group">
+	{!! Form::label('schedule', 'Horario') !!}
+	{!! Form::input('text', 'load', null, ['class' => 'form-control', 'placeholder' => 'L1-J1-W3']) !!}
+</div>
+
 <div class="form-group">
 	{!! Form::submit($submitButtonText, ['class' => 'btn btn-primary form-control']) !!}
 </div>

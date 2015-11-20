@@ -2,7 +2,7 @@
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-
+use App\Role;
 use App\User;
 use Illuminate\Http\Request;
 
@@ -27,7 +27,8 @@ class UserController extends Controller {
 	 */
 	public function create()
 	{
-		return view('users.create');
+		$roles = Role::lists('name', 'id');
+		return view('users.create', compact('roles'));
 	}
 
 	/**
@@ -55,9 +56,9 @@ class UserController extends Controller {
 	 */
 	public function show($id)
 	{
-		$tweet = Tweet::findOrFail($id);
+		$user = User::findOrFail($id);
 
-		return view('tweets.show', compact('tweet'));
+		return view('users.show', compact('user'));
 	}
 
 	/**
@@ -68,9 +69,12 @@ class UserController extends Controller {
 	 */
 	public function edit($id)
 	{
-		$tweet = Tweet::findOrFail($id);
 
-		return view('tweets.edit', compact('tweet'));
+		$roles = Role::lists('name', 'id');
+
+		$user = User::findOrFail($id);
+
+		return view('users.edit', compact('user', 'roles'));
 	}
 
 	/**
@@ -82,14 +86,8 @@ class UserController extends Controller {
 	 */
 	public function update(Request $request, $id)
 	{
-		$tweet = Tweet::findOrFail($id);
 
-		$tweet->title = $request->input("title");
-        $tweet->body = $request->input("body");
 
-		$tweet->save();
-
-		return redirect()->route('tweets.index')->with('message', 'Item updated successfully.');
 	}
 
 	/**
@@ -100,10 +98,10 @@ class UserController extends Controller {
 	 */
 	public function destroy($id)
 	{
-		$tweet = Tweet::findOrFail($id);
-		$tweet->delete();
+		$user = User::findOrFail($id);
+		$user->delete();
 
-		return redirect()->route('tweets.index')->with('message', 'Item deleted successfully.');
+		return redirect()->route('users.index')->with('message', 'Item deleted successfully.');
 	}
 
 }

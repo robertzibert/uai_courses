@@ -20,7 +20,7 @@
 
 <div class="form-group">
 	{!! Form::label('role_id', 'Rol') !!}
-	{!! Form::text('role_id', null, ['class' => 'form-control']) !!}
+	{!! Form::select('role_id', $roles , null, ['class' => 'form-control']) !!}
 </div>
 
 <div class="form-group">
