@@ -106,6 +106,10 @@ class ScheduleController extends Controller
                 $record->course_id = $course->id;
                 $record->professor_id = $professor->id;
                 $record->save();
+
+                $course = Course::findOrFail($course->id);
+                $course->taken = 1;
+                $course->save();
         }
         return redirect("schedules/$course->year-$course->semester/$area/$professor->id");
     }
@@ -215,6 +219,9 @@ class ScheduleController extends Controller
     public function destroy($id,$area,$professor)
     {
         $course     = Course::where('id',$id)->first();
+                $course = Course::findOrFail($id);
+                $course->taken = 0;
+                $course->save();
         $schedules = schedule::where('course_id',$id)->delete();
         return redirect("schedules/$course->year-$course->semester/$area/$professor");
     }
