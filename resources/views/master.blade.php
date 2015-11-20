@@ -31,7 +31,7 @@
 
 <body>
 
-    @include('head')
+    @include('layouts.head')
 
     <div class="container">
         @yield('header')
