@@ -14,13 +14,15 @@
 </div>
 
 <div class="form-group">
-	{!! Form::label('branch', 'Sucursal') !!}
-	{!! Form::text('branch', null, ['class' => 'form-control']) !!}
+	{!! Form::label('branch', 'Sede') !!}
+	{!! Form::select('branch', array('santiago' => 'Santiago', 'viña' => 'Viña del Mar'),  null, ['class' => 'form-control']);!!}
+
 </div>
 
 <div class="form-group">
 	{!! Form::label('semester', 'Semestre') !!}
-	{!! Form::text('semester', null, ['class' => 'form-control']) !!}
+	{!! Form::select('semester', array('1' => '1', '2' => '2'),  null, ['class' => 'form-control']);!!}
+
 </div>
 
 <div class="form-group">
@@ -42,7 +44,6 @@
 <div class="form-group">
 	{!! Form::label('load', 'Carga') !!}
 	{!! Form::input('number', 'load', null, ['class' => 'form-control']) !!}
->>>>>>> course_registration
 </div>
 
 <div class="form-group">

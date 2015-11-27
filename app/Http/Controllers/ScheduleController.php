@@ -22,11 +22,26 @@ class ScheduleController extends Controller
      */
     public function index()
     {
-      $user      = Auth::user()->with('role')->first();
-      $split     = explode(" ", $user->role->name);
-      $role_area = $split[count($split)-1];
+      $user         = Auth::user()->with('role')->first();
+      $split        = explode(" ", $user->role->name);
+      $role_area    = $split[count($split)-1];
 
-      return view('schedules.index');
+      if($role_area == "Administrador"){
+          $professors   = Professor::all()  ->toArray();
+          $courses      = Course::all()     ->toArray();
+      }
+      $professorCourse = array();
+      foreach ($courses as $course) {
+        if(Schedule::where('course_id',$course['id'])->first() != null){
+            $professorId[] = Schedule::where('course_id',$course['id'])->first()->professor_id;
+            $professorCourse[$course['id']]=Professor::where('id',$professorId)->first()->name;
+        }
+        else{
+            $professorCourse[$course['id']]="No Asignado";
+        }
+      }
+
+      return view('schedules.index',compact('professors', 'courses', 'professorCourse'));
 
     }
 
@@ -48,14 +63,14 @@ class ScheduleController extends Controller
      */
     public function store(Request $request)
     {
-        $course     = Course::where('id',$request->get('course'))->first();
-        $professor     = Professor::where('id',$request->get('professor'))->first();
-        $area       = $request->get('area');
-        $schedulesYear =Schedule::join('courses', 'courses.id', '=', 'schedules.course_id')
+        $course         = Course::where('id',$request->get('course'))->first();
+        $professor      = Professor::where('id',$request->get('professor'))->first();
+        $area           = $request->get('area');
+        $schedulesYear  =Schedule::join('courses', 'courses.id', '=', 'schedules.course_id')
                         ->where('schedules.professor_id',$professor->id)
                         ->where('courses.year',$course->year)
                         ->get();
-        $professorLoad=0;
+        $professorLoad  = 0;
         foreach($schedulesYear as $sche){
             $professorLoad = $professorLoad + count(explode("-",$sche->course()->first()->schedule))*22.5;
         }
@@ -110,10 +125,16 @@ class ScheduleController extends Controller
             }
         }
         if(isset($course) && isset($professor)){
+
+                $professorLoad = $professorLoad + count($selectedCourseSchedule)*22.5;
                 $record = new Schedule;
                 $record->course_id = $course->id;
                 $record->professor_id = $professor->id;
                 $record->save();
+
+                $prof = Professor::findOrFail($professor->id);
+                $prof->current_load = $professorLoad;
+                $prof->save();
 
                 $course = Course::findOrFail($course->id);
                 $course->taken = 1;
@@ -230,6 +251,14 @@ class ScheduleController extends Controller
                 $course = Course::findOrFail($id);
                 $course->taken = 0;
                 $course->save();
+
+
+        $prof = Professor::findOrFail($professor);
+        $selectedCourseSchedule = explode("-",$course->schedule);
+        $professorLoad = $prof->current_load - count($selectedCourseSchedule)*22.5;
+        $prof->current_load = $professorLoad;
+        $prof->save();
+                
         $schedules = schedule::where('course_id',$id)->delete();
         return redirect("schedules/$course->year-$course->semester/$area/$professor");
     }

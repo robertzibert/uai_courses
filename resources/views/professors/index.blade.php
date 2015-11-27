@@ -6,7 +6,7 @@
 		<th>Nombre</th>
 		<th>Tipo</th>
 		<th>Rut</th>
-		<th>Carga mínima</th>
+		<th>Carga Anual</th>
 		<th>Carga Máxima</th>
 		<th>Sede de Origen</th>
 		<th>Acciones</th>
