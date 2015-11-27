@@ -85,8 +85,9 @@ class ScheduleController extends Controller
         foreach($courseSchedules as $courseSchedule){
             if($courseSchedule->schedule()->first() !=null){
                 if($courseSchedule->schedule()->first()->professor_id == $professor->id){
+                    $hours2 = explode("-",$courseSchedule->schedule);
                     $hours  = array_merge(explode("-",$courseSchedule->schedule),$hours);
-                    foreach($hours as $h){
+                    foreach($hours2 as $h){
                         $days[$h[0]]=$courseSchedule->branch;
                     }
                 }
