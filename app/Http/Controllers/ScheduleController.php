@@ -33,7 +33,7 @@ class ScheduleController extends Controller
       $professorCourse = array();
       foreach ($courses as $course) {
         if(Schedule::where('course_id',$course['id'])->first() != null){
-            $professorId[] = Schedule::where('course_id',$course['id'])->first()->professor_id;
+            $professorId = Schedule::where('course_id',$course['id'])->first()->professor_id;
             $professorCourse[$course['id']]=Professor::where('id',$professorId)->first()->name;
         }
         else{
