@@ -6,6 +6,8 @@ use App\Area;
 use App\Professor;
 use Illuminate\Http\Request;
 
+use Excel;
+
 class ProfessorController extends Controller {
 
 	/**
@@ -87,10 +89,7 @@ class ProfessorController extends Controller {
 	public function update(Request $request, $id)
 	{
 		$professor = Professor::findOrFail($id);
-
-
-
-		$professor->save();
+		$professor->update($request->all());
 
 		return redirect()->route('professors.index')->with('message', 'Item updated successfully.');
 	}
@@ -108,5 +107,40 @@ class ProfessorController extends Controller {
 
 		return redirect()->route('professors.index')->with('message', 'Item deleted successfully.');
 	}
+
+	public function import(Request $request)
+		{
+				$file    = $request->file('excel');
+				//var_dump($filename);
+				Excel::load($file, function($input) {
+							$results = $input->all();
+
+							foreach ($results as $result) {
+								// Search if a course exist
+								$course = Course::where('code', $result->codigo)->get();
+								// if doesn't exist we save it
+								if(!isset($course)){
+									$area   = Area::where('name',$result->area)->get();
+
+									$course           = new Course();
+									$course->area_id  = $area->id;
+									$course->code     = $area->codigo;
+									$course->section  = $area->seccion;
+									$course->year     = $area->year;
+									$course->semester = $area->semestre;
+									$course->branch   = $area->sucursal;
+									$course->schedule = $area->horario;
+									$course->save();
+
+								}
+							}
+				});
+
+				return redirect()->route('courses.index')->with('message', 'Cursos creados Correctamente.');
+
+
+		}
+
+
 
 }

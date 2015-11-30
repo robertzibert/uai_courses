@@ -27,8 +27,10 @@ class ScheduleController extends Controller
       $role_area    = $split[count($split)-1];
 
       if($role_area == "Administrador"){
-          $professors   = Professor::all()  ->toArray();
-          $courses      = Course::all()     ->toArray();
+          $professors   = Professor::all()->toArray();
+          $courses      = Course::with('area')->get()->toArray();
+          $unasigned_courses = Course::with('area')->where('taken',0)->get();
+          $asigned_courses   = Course::with('area')->where('taken',1)->get();
       }
       $professorCourse = array();
       foreach ($courses as $course) {
@@ -41,7 +43,7 @@ class ScheduleController extends Controller
         }
       }
 
-      return view('schedules.index',compact('professors', 'courses', 'professorCourse'));
+      return view('schedules.index',compact('professors', 'courses', 'professorCourse','unasigned_courses','asigned_courses'));
 
     }
 
@@ -118,7 +120,7 @@ class ScheduleController extends Controller
         foreach($selectedCourseSchedule as $oneSchedule){
             if(in_array($oneSchedule,$hours)){
                 return redirect()->back()->withErrors('El curso seleccionado tiene tope de horario con otro curso ya asignado.')->withInput();;
-            }elseif($days[$oneSchedule[0]]!=$course->branch && $days[$oneSchedule[0]]!=null){ 
+            }elseif($days[$oneSchedule[0]]!=$course->branch && $days[$oneSchedule[0]]!=null){
                 return redirect()->back()->withErrors('No es posible asignar dos cursos con distintas sedes el mismo día.')->withInput();;
             }elseif($professorLoad + count($selectedCourseSchedule)*22.5 > $professor->max_load){
                 return redirect()->back()->withErrors('Añadir este curso excede la carga máxima del profesor seleccionado.')->withInput();;
@@ -258,7 +260,7 @@ class ScheduleController extends Controller
         $professorLoad = $prof->current_load - count($selectedCourseSchedule)*22.5;
         $prof->current_load = $professorLoad;
         $prof->save();
-                
+
         $schedules = schedule::where('course_id',$id)->delete();
         return redirect("schedules/$course->year-$course->semester/$area/$professor");
     }

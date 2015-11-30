@@ -5,7 +5,7 @@
 <ul class="nav nav-tabs">
   <li class="active"><a data-toggle="tab" href="#Courses">Cursos</a></li>
   <li><a data-toggle="tab" href="#Professors">Profesores</a></li>
-</ul> 
+</ul>
 <div class="tab-content">
   <div id="Courses" class="tab-pane fade in active">
     <br>
@@ -17,11 +17,11 @@
     <div class="tab-content well">
      <div id="unasigned" class="tab-pane fade in active">
        <h3>Cursos sin Asignar</h3>
-       @include('layouts.tables._schedules', ['id' => 'dataTable'])
+       @include('layouts.tables._schedules', ['id' => 'dataTable', 'courses' => $unasigned_courses])
      </div>
      <div id="asigned" class="tab-pane fade">
        <h3>Cursos Asignados</h3>
-       @include('layouts.tables._schedules', ['id' => 'dataTable1'])
+       @include('layouts.tables._schedules', ['id' => 'dataTable1', 'courses' => $asigned_courses])
      </div>
     </div>
   </div>

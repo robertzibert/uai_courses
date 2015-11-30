@@ -14,7 +14,7 @@ Html::macro('actions', function($id)
 
        <a class="btn btn-xs btn-warning" href="'.route($object.'.edit', $id).'">
          <i class="glyphicon glyphicon-edit"></i> Edit
-         </a>'
+         </a> '
        .Html::customButton('btn btn-xs btn-danger', 'glyphicon glyphicon-trash', 'Delete').
        Form::close();
 
