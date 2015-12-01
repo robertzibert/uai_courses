@@ -10,7 +10,7 @@
   </thead>
   <tbody>
     @foreach($professors as $professor)
-    @if(($id == 'dataTable2') || ($professor['type'] == 'Hora' && $id == 'dataTable3')|| ($professor['type'] == 'Instructor' && $id == 'dataTable4')|| ($professor['type'] == 'Regular' && $id == 'dataTable5')|| ($professor['type'] == 'Administrativo-docente' && $id == 'dataTable6'))
+    @if(($id == 'dataTable2') || ($professor['type'] == 'Hora' && $id == 'dataTable3')|| ($professor['type'] == 'Instructor' && $id == 'dataTable5')|| ($professor['type'] == 'Regular' && $id == 'dataTable6')|| ($professor['type'] == 'Administrativo-docente' && $id == 'dataTable4'))
     <tr>
       <td>{{$professor['name']}}</td>
       <td>{{$professor['rut']}}</td>

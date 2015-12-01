@@ -85,7 +85,7 @@ class CourseController extends Controller {
 	{
 		$course = Course::findOrFail($id);
 
-		$course->save();
+		$course->update($request->all());
 
 		return redirect()->route('courses.index')->with('message', 'Item updated successfully.');
 	}

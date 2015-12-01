@@ -72,7 +72,7 @@
             @endif
      @foreach($arrayCourses as $course)
         <li><a><table><tr><td class="col-xs-11">{!!$course['code']."-".$course['section']." ".$course['branch']!!}</td>
-        @if($course['area']==$area)
+        @if($course['area']==$area || $userRole == "Administrador")
         <td class="col-xs-1">
             {!! Form::open(['route' => ['destroyroute', $course['id'],$area,$professor->id], 'method' => 'delete', 'class'=>'form-inline']) !!}
                 <button type="submit" class="btn btn-default btn-xs">

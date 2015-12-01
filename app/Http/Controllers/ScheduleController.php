@@ -65,6 +65,8 @@ class ScheduleController extends Controller
      */
     public function store(Request $request)
     {
+        $userRole = Auth::user()->role()->first()->name;
+
         $course         = Course::where('id',$request->get('course'))->first();
         $professor      = Professor::where('id',$request->get('professor'))->first();
         $area           = $request->get('area');
@@ -120,9 +122,9 @@ class ScheduleController extends Controller
         foreach($selectedCourseSchedule as $oneSchedule){
             if(in_array($oneSchedule,$hours)){
                 return redirect()->back()->withErrors('El curso seleccionado tiene tope de horario con otro curso ya asignado.')->withInput();;
-            }elseif($days[$oneSchedule[0]]!=$course->branch && $days[$oneSchedule[0]]!=null){
+            }elseif($days[$oneSchedule[0]]!=$course->branch && $days[$oneSchedule[0]]!=null && $userRole != "Administrador"){
                 return redirect()->back()->withErrors('No es posible asignar dos cursos con distintas sedes el mismo día.')->withInput();;
-            }elseif($professorLoad + count($selectedCourseSchedule)*22.5 > $professor->max_load){
+            }elseif($professorLoad + count($selectedCourseSchedule)*22.5 > $professor->max_load && $userRole != "Administrador"){
                 return redirect()->back()->withErrors('Añadir este curso excede la carga máxima del profesor seleccionado.')->withInput();;
             }
         }
@@ -153,16 +155,23 @@ class ScheduleController extends Controller
      */
     public function show($date,$area,$professorId)
     {
+        $userRole = Auth::user()->role()->first()->name;
+        //Administrador
         $dateExp    = explode("-",$date);
         $year       = $dateExp[0];
         $semester   = $dateExp[1];
         $professor          = Professor::FindOrFail($professorId);
         $professorFromAreas = Area::where('name', $area)->first()->professors()->get();
+        $todasAreas         = Area::all()->toArray();
+        $arrayAreas         = array();
+        foreach($todasAreas as $unArea){
+          $arrayAreas[$unArea['id']] = $unArea['name'];
+        }
         $professorLoad      = 0;
         $arrayProfessors    = array();
         $arrayCourses       = array();
 
-        $areaCourses        = Course::where('area',$area)->where('year',$year)->where('semester',$semester)->get();
+        $areaCourses        = Course::join('areas', 'areas.id', '=', 'courses.area_id')->where('areas.name',$area)->where('courses.year',$year)->where('courses.semester',$semester)->get();
         $courseSelect       = array();
         foreach($areaCourses as $oneCourse){
             if(count($oneCourse->schedule()->groupBy('professor_id')->get()) == 0){
@@ -181,7 +190,7 @@ class ScheduleController extends Controller
             $course                 = array();
             $code                   = $schedule->course()->first()->code;
             $course['name']         = $schedule->course()->first()->name;
-            $course['area']         = $schedule->course()->first()->area;
+            $course['area']         = $arrayAreas[$schedule->course()->first()->area_id];
             $course['branch']       = $schedule->course()->first()->branch;
             $course['section']      = $schedule->course()->first()->section;
             $course['semester']     = $schedule->course()->first()->semester;
@@ -215,7 +224,7 @@ class ScheduleController extends Controller
         $previewsDate = $previewsYear."-".$nextSemester;
         $urlAnterior = "schedules/$previewsDate/$area/$professor->id";
         $urlSiguiente = "schedules/$nextDate/$area/$professor->id";
-        return view('schedules.show', compact('year','semester','urlAnterior','urlSiguiente','professor','courseSelect','arrayCourses','arrayProfessors','array','area','professorLoad'));
+        return view('schedules.show', compact('year','semester','urlAnterior','urlSiguiente','professor','courseSelect','arrayCourses','arrayProfessors','array','area','professorLoad', 'userRole' ));
     }
 
     /**
