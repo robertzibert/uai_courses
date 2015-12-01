@@ -42,6 +42,7 @@ Route::delete('schedules/delete/{id}/{area}/{professor}',array('uses' => 'Schedu
 
 Route::get('schedules/{date}/{area}/{professor}', ['uses' =>'ScheduleController@show']);
 Route::post('schedules', ['uses' =>'ScheduleController@store']);
+Route::post('schedules/insert_control', ['uses' =>'ScheduleController@insert_control']);
 
 Route::get('auth/login', 'Auth\AuthController@getLogin');
 Route::post('auth/login', 'Auth\AuthController@postLogin');

@@ -12,6 +12,7 @@ use App\Professor;
 use App\Schedule;
 use App\Area;
 use App\Professorsarea;
+use App\Insert_control;
 
 class ScheduleController extends Controller
 {
@@ -25,13 +26,14 @@ class ScheduleController extends Controller
       $user         = Auth::user()->with('role')->first();
       $split        = explode(" ", $user->role->name);
       $role_area    = $split[count($split)-1];
-
-      if($role_area == "Administrador"){
+      $userRole = Auth::user()->role()->first()->name;
+      
+      //if($userRole == "Administrador"){
           $professors   = Professor::all()->toArray();
           $courses      = Course::with('area')->get()->toArray();
           $unasigned_courses = Course::with('area')->where('taken',0)->get();
           $asigned_courses   = Course::with('area')->where('taken',1)->get();
-      }
+      //}
       $professorCourse = array();
       foreach ($courses as $course) {
         if(Schedule::where('course_id',$course['id'])->first() != null){
@@ -155,8 +157,14 @@ class ScheduleController extends Controller
      */
     public function show($date,$area,$professorId)
     {
+        $insert_control = Insert_control::where('period',$date)->first();
+        if($insert_control == null){
+          $insert_control = 0;
+        }
+        else{
+        $insert_control = $insert_control->available;
+        }
         $userRole = Auth::user()->role()->first()->name;
-        //Administrador
         $dateExp    = explode("-",$date);
         $year       = $dateExp[0];
         $semester   = $dateExp[1];
@@ -224,7 +232,7 @@ class ScheduleController extends Controller
         $previewsDate = $previewsYear."-".$nextSemester;
         $urlAnterior = "schedules/$previewsDate/$area/$professor->id";
         $urlSiguiente = "schedules/$nextDate/$area/$professor->id";
-        return view('schedules.show', compact('year','semester','urlAnterior','urlSiguiente','professor','courseSelect','arrayCourses','arrayProfessors','array','area','professorLoad', 'userRole' ));
+        return view('schedules.show', compact('year','semester','urlAnterior','urlSiguiente','professor','courseSelect','arrayCourses','arrayProfessors','array','area','professorLoad', 'userRole', 'insert_control' ));
     }
 
     /**
@@ -272,5 +280,28 @@ class ScheduleController extends Controller
 
         $schedules = schedule::where('course_id',$id)->delete();
         return redirect("schedules/$course->year-$course->semester/$area/$professor");
+    }
+
+
+    public function insert_control(Request $request)
+    {
+        $professor      = Professor::where('id',$request->get('professor'))->first();
+        $area           = $request->get('area');
+        $period         = $request->get('period');
+        //dd($period);
+        $insert_control = Insert_control::where('period', $period)->first();
+        if($insert_control != null){    
+          $record = $insert_control;
+          $record->available = !$record->available;
+          $record->save();
+        }
+        else{
+          $record = new Insert_control;
+          $record->period = $period;
+          $record->available = 1;
+          $record->save();
+        }
+
+        return redirect("schedules/$period/$area/$professor->id");
     }
 }

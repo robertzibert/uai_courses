@@ -19,11 +19,16 @@
       <td>{{$professor['max_load']}}</td>
       <td>{{$professor['current_load']}}</td>
       <td><!-- Single button -->
-<div class="btn-group">
-  <button type="button" class="btn btn-default">
-    Asignar Curso
-  </button>
-</div></td>
+        <div class="btn-group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Asignar <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li><a href="#">Rely</a></li>
+            <li><a href="#">Carols</a></li>
+          </ul>
+        </div>
+      </td>
     </tr>
     @endif
     @endforeach
