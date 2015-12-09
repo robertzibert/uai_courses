@@ -22,7 +22,6 @@ class ScheduleController extends Controller
      */
     public function index()
     {
-<<<<<<< HEAD
       $user         = Auth::user()->with('role')->first();
       $split        = explode(" ", $user->role->name);
       $role_area    = $split[count($split)-1];
