@@ -31,6 +31,8 @@ Route::group(['middleware' => 'auth'], function () {
 
 });
 
+Route::post('professors/import',['as' => 'professors.import', 'uses' =>'ProfessorController@import' ]);
+Route::post('courses/import',['as' => 'courses.import', 'uses' =>'CourseController@import' ]);
 
 Route::get('/dashboard', ['uses' =>'ScheduleController@index']);
 
@@ -49,3 +51,13 @@ Route::get('auth/logout', 'Auth\AuthController@getLogout');
 Route::get('auth/register', 'Auth\AuthController@getRegister');
 Route::post('auth/register',['as' => 'auth.register', 'uses' =>'Auth\AuthController@postRegister' ]);
 
+
+
+Route::get('test', function () {
+  $areas = \App\Area::with('professors')->get()->toArray();
+  $collection = collect($areas);
+  $keyed = $collection->keyBy('name')->toArray();
+
+  dd($keyed["OPERACIONES"]);
+
+});
