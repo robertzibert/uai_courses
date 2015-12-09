@@ -26,8 +26,8 @@ class ScheduleController extends Controller
       $split        = explode(" ", $user->role->name);
       $role_area    = $split[count($split)-1];
 
-      $unasigned_courses = Course::where('taken', 0)->where('area_id', $area->id)->get();
-      $asigned_courses   = Course::where('taken', 1)->where('area_id', $area->id)->get();
+
+
 
       if($role_area == "Administrador"){
           $professors   = Professor::all()->toArray();
@@ -42,7 +42,10 @@ class ScheduleController extends Controller
             $professorCourse[$course['id']]=Professor::where('id',$professorId)->first()->name;
         }
         else{
-            $professorCourse[$course['id']]="No Asignado";
+          $area = Area::where('name',$role_area)->first();
+          $unasigned_courses = Course::where('taken', 0)->where('area_id', $area->id)->get();
+          $asigned_courses   = Course::where('taken', 1)->where('area_id', $area->id)->get();
+          $professorCourse[$course['id']]="No Asignado";
         }
       }
 
