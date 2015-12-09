@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Course;
 use App\Area;
 use Excel;
+
 use Illuminate\Http\Request;
 
 class CourseController extends Controller {
@@ -29,7 +30,8 @@ class CourseController extends Controller {
 	 */
 	public function create()
 	{
-		$areas = Area::lists('name','id');
+
+		$areas = Area::getAreas();
 		return view('courses.create', compact('areas'));
 	}
 
@@ -54,8 +56,8 @@ class CourseController extends Controller {
 	 */
 	public function show($id)
 	{
-		$course = Course::findOrFail($id);
 
+		$course = Course::findOrFail($id);
 		return view('courses.show', compact('course'));
 	}
 
@@ -67,7 +69,7 @@ class CourseController extends Controller {
 	 */
 	public function edit($id)
 	{
-		$areas = Area::lists('name','id');
+		$areas = Area::getAreas();
 
 		$course = Course::findOrFail($id);
 

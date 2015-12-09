@@ -1,6 +1,6 @@
 <div class="form-group">
-	{!! Form::label('area', 'Area') !!}
-	{!! Form::select('area_id', $areas, null, ['class' => 'form-control']) !!}
+	{!! Form::label('area_id', 'Área') !!}
+	{!! Form::select('area_id', $areas ,  null, ['class' => 'form-control']) !!}
 </div>
 
 <div class="form-group">

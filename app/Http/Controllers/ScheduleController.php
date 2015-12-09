@@ -22,9 +22,13 @@ class ScheduleController extends Controller
      */
     public function index()
     {
+<<<<<<< HEAD
       $user         = Auth::user()->with('role')->first();
       $split        = explode(" ", $user->role->name);
       $role_area    = $split[count($split)-1];
+
+      $unasigned_courses = Course::where('taken', 0)->where('area_id', $area->id)->get();
+      $asigned_courses   = Course::where('taken', 1)->where('area_id', $area->id)->get();
 
       if($role_area == "Administrador"){
           $professors   = Professor::all()->toArray();
