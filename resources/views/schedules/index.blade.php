@@ -17,7 +17,7 @@
     <div class="tab-content well">
      <div id="unasigned" class="tab-pane fade in active">
        <h3>Cursos sin Asignar</h3>
-       @include('layouts.tables._schedules', ['id' => 'dataTable', 'courses' => $unasigned_courses])
+       @include('layouts.tables._schedules', ['id' => 'dataTable', 'courses' => $unasigned_courses, 'professors' => $area_professors])
      </div>
      <div id="asigned" class="tab-pane fade">
        <h3>Cursos Asignados</h3>
@@ -57,6 +57,12 @@
        @include('layouts.tables._schedulesProfessor', ['id' => 'dataTable6'])
      </div>
     </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    {!! HTML::periodButtons($semester, $year) !!}
   </div>
 </div>
 

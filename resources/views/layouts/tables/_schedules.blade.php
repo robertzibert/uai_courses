@@ -21,8 +21,11 @@
             Asignar <span class="caret"></span>
           </button>
           <ul class="dropdown-menu">
-            <li><a href="#">Rely</a></li>
-            <li><a href="#">Carols</a></li>
+          @foreach($professors[$course->area()->first()->name]['professors'] as $professor)
+
+            <li><a href="#">{{$professor['name']}}</a></li
+
+          @endforeach
           </ul>
         </div>
       </td>
