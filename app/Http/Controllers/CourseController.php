@@ -86,10 +86,10 @@ class CourseController extends Controller {
 	public function update(Request $request, $id)
 	{
 		$course = Course::findOrFail($id);
-
-		$course->save();
+		$course->update($request->all());
 
 		return redirect()->route('courses.index')->with('message', 'Item updated successfully.');
+
 	}
 
 	/**
@@ -114,26 +114,30 @@ class CourseController extends Controller {
 	public function import(Request $request)
 		{
 				$file    = $request->file('excel');
+
+
 				//var_dump($filename);
 				Excel::load($file, function($input) {
 							$results = $input->all();
 
 							foreach ($results as $result) {
 								// Search if a course exist
-								$course = Course::where('code', $result->codigo)->get();
+								$course = Course::where('code', $result->codigo)->first();
+
 								// if doesn't exist we save it
 								if(!isset($course)){
-									$area   = Area::where('name',$result->area)->get();
+									$area   = Area::where('name',$result->area)->first();
 
 									$course           = new Course();
 									$course->area_id  = $area->id;
-									$course->code     = $area->codigo;
-									$course->section  = $area->seccion;
-									$course->year     = $area->year;
-									$course->semester = $area->semestre;
-									$course->branch   = $area->sucursal;
-									$course->schedule = $area->horario;
+									$course->code     = $result->codigo;
+									$course->section  = $result->seccion;
+									$course->year     = $result->year;
+									$course->semester = $result->semestre;
+									$course->branch   = $result->sucursal;
+									$course->schedule = $result->horario;
 									$course->save();
+
 
 								}
 							}

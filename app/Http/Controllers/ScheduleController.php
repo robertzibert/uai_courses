@@ -20,34 +20,46 @@ class ScheduleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($semester = null, $year = null)
     {
-<<<<<<< HEAD
+
       $user         = Auth::user()->with('role')->first();
       $split        = explode(" ", $user->role->name);
       $role_area    = $split[count($split)-1];
 
-      $unasigned_courses = Course::where('taken', 0)->where('area_id', $area->id)->get();
-      $asigned_courses   = Course::where('taken', 1)->where('area_id', $area->id)->get();
+
+      $areas           = Area::with('professors')->get()->toArray();
+      $collection      = collect($areas);
+      $area_professors = $collection->keyBy('name')->toArray();
+
+      // TODO: Pasar esto a un Helper
+      if($semester == null) \Carbon\Carbon::now()->month >= 5 ? $semester = 2 : $semester = 1;
+
+      $year == null ? $year = \Carbon\Carbon::now()->year : $year = $year;
 
       if($role_area == "Administrador"){
           $professors   = Professor::all()->toArray();
           $courses      = Course::with('area')->get()->toArray();
-          $unasigned_courses = Course::with('area')->where('taken',0)->get();
-          $asigned_courses   = Course::with('area')->where('taken',1)->get();
+          //TODO: Pasar esto a un scope
+          $unasigned_courses = Course::with('area')->where('taken',0)->where('semester', $semester)->where('year', $year)->get();
+          $asigned_courses   = Course::with('area')->where('taken',1)->where('semester', $semester)->where('year', $year)->get();
       }
-      $professorCourse = array();
-      foreach ($courses as $course) {
-        if(Schedule::where('course_id',$course['id'])->first() != null){
-            $professorId = Schedule::where('course_id',$course['id'])->first()->professor_id;
-            $professorCourse[$course['id']]=Professor::where('id',$professorId)->first()->name;
-        }
         else{
-            $professorCourse[$course['id']]="No Asignado";
+          $area = Area::where('name',$role_area)->first();
+          $unasigned_courses = Course::where('taken', 0)->where('area_id', $area->id)->where('semester', $semester)->where('year', $year)->get();
+          $asigned_courses   = Course::where('taken', 1)->where('area_id', $area->id)->where('semester', $semester)->where('year', $year)->get();
+          $professorCourse[$course['id']]="No Asignado";
         }
+
+        $professorCourse = array();
+        foreach ($courses as $course) {
+          if(Schedule::where('course_id',$course['id'])->first() != null){
+              $professorId = Schedule::where('course_id',$course['id'])->first()->professor_id;
+              $professorCourse[$course['id']]=Professor::where('id',$professorId)->first()->name;
+          }
       }
 
-      return view('schedules.index',compact('professors', 'courses', 'professorCourse','unasigned_courses','asigned_courses'));
+      return view('schedules.index',compact('area_professors','professors', 'courses', 'professorCourse','unasigned_courses','asigned_courses', 'year', 'semester'));
 
     }
 
@@ -268,4 +280,5 @@ class ScheduleController extends Controller
         $schedules = schedule::where('course_id',$id)->delete();
         return redirect("schedules/$course->year-$course->semester/$area/$professor");
     }
+
 }

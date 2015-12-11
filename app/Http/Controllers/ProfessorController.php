@@ -113,30 +113,39 @@ class ProfessorController extends Controller {
 				$file    = $request->file('excel');
 				//var_dump($filename);
 				Excel::load($file, function($input) {
+
 							$results = $input->all();
 
 							foreach ($results as $result) {
+
 								// Search if a course exist
-								$course = Course::where('code', $result->codigo)->get();
+								$professor = Professor::where('rut', $result->rut)->first();
 								// if doesn't exist we save it
-								if(!isset($course)){
-									$area   = Area::where('name',$result->area)->get();
+								if(!isset($professor)){
+									$professor              = new Professor();
+									$professor->name        = $result->nombre_completo;
+									$professor->type        = $result->categoria;
+									$professor->rut         = $result->rut;
+									$professor->sede_origen = $result->sede_origen;
+									$professor->min_load    = $result->carga_docente_minima;
+									$professor->max_load    = $result->carga_docente_maxima;
+									$professor->save();
+									
 
-									$course           = new Course();
-									$course->area_id  = $area->id;
-									$course->code     = $area->codigo;
-									$course->section  = $area->seccion;
-									$course->year     = $area->year;
-									$course->semester = $area->semestre;
-									$course->branch   = $area->sucursal;
-									$course->schedule = $area->horario;
-									$course->save();
+									//TODO: Pasar esto a el modelo o a una query class
+									$areas = explode(',', $result->areas);
 
+									foreach ($areas as $key => $area) {
+										$areaIdArray[] = Area::where('name',$area)->first()->id;
+									}
+
+									$professor->areas()->sync($areaIdArray);
 								}
+
 							}
 				});
 
-				return redirect()->route('courses.index')->with('message', 'Cursos creados Correctamente.');
+				return redirect()->route('professors.index')->with('message', 'Cursos creados Correctamente.');
 
 
 		}
