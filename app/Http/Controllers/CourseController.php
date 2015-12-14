@@ -132,11 +132,13 @@ class CourseController extends Controller {
 									$course           = new Course();
 									$course->area_id  = $area->id;
 									$course->code     = $result->codigo;
+									$course->name     = $result->nombre;
 									$course->section  = $result->seccion;
 									$course->year     = $result->year;
 									$course->semester = $result->semestre;
 									$course->branch   = $result->sucursal;
 									$course->schedule = $result->horario;
+									$course->load     = $result->carga;
 									$course->save();
 
 
