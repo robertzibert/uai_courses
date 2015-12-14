@@ -42,7 +42,7 @@
 
 <div class="form-group">
 	{!! Form::label('branch', 'Sede') !!}
-	{!! Form::select('branch', array('santiago' => 'Santiago', 'viña' => 'Viña del Mar'),  null, ['class' => 'form-control']);!!}
+	{!! Form::select('branch', array('Santiago' => 'Santiago', 'Viña del Mar' => 'Viña del Mar'),  null, ['class' => 'form-control']);!!}
 
 </div>
 

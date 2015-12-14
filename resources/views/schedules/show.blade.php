@@ -9,6 +9,7 @@
 @endsection
 
 @section('content')
+@if(!isset($status))
     <style type="text/css">
     @foreach($arrayCourses as $course)
         @foreach($course['schedule'] as $horario)
@@ -21,8 +22,8 @@
     @if($errors->has())
        @foreach ($errors->all() as $error)
         <div class="alert alert-danger" role="alert">
-            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-            <span class="sr-only">Error:</span>
+            <i class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></i>
+            <i class="sr-only">Error:</i>
             Error: {{ $error }}
         </div>
       @endforeach
@@ -30,60 +31,61 @@
     <div class="row">
 
         <div class="col-md-4">
-        <a href="{{ URL::to($urlAnterior) }}">
-        <button class="btn btn-default btn-xs">
-          <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>Semestre anterior
-        </button>
-        <a href="{{ URL::to($urlSiguiente) }}">
+            <a href="{{ URL::to($urlAnterior) }}">
             <button class="btn btn-default btn-xs">
-              Siguiente Semestre<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                <i class="glyphicon glyphicon-chevron-left" aria-hidden="true"></i>Semestre anterior
             </button>
-        </a>
+            <a href="{{ URL::to($urlSiguiente) }}">
+                <button class="btn btn-default btn-xs">
+                  Siguiente Semestre<i class="glyphicon glyphicon-chevron-right" aria-hidden="true"></i>
+                </button>
+            </a>
             <div class="form-group">
-            <h5>
-                <p><b>Nombre Profesor</b>: {{$professor->name}}</p>
-                <p><b>Disponibilidad</b>: {{$professor->type}}</p>
-                <p><b>RUT</b>: {{$professor->rut}}</p>
-                <p><b>Sede de Origen</b>: {{$professor->sede_origen}}</p>
-                <p><b>Carga Máxima</b>: {{$professor->max_load}} hrs.</p>
-                <p><b>Carga Mínima</b>: {{$professor->min_load}} hrs.</p>
-                <p><b>Carga Asignada</b>: {{$professorLoad}} hrs.</p>
-            </h5>
+                <h5>
+                    <p><b>Nombre Profesor</b>: {{$professor->name}}</p>
+                    <p><b>Disponibilidad</b>: {{$professor->type}}</p>
+                    <p><b>RUT</b>: {{$professor->rut}}</p>
+                    <p><b>Sede de Origen</b>: {{$professor->sede_origen}}</p>
+                    <p><b>Carga Máxima</b>: {{$professor->max_load}} hrs.</p>
+                    <p><b>Carga Mínima</b>: {{$professor->min_load}} hrs.</p>
+                    <p><b>Carga Asignada</b>: {{$professorLoad}} hrs.</p>
+                </h5>
             </div>
         
-     <ul class="nav nav-pills nav-stacked">
+            <ul class="nav nav-pills nav-stacked">
 
-    <li class="active"><a>Cursos</a></li>
-            <br>
-                    @if($courseSelect!=array())
-            {!! Form::open(['url'=>'schedules'])!!}
-                <input type="hidden" name="professor" value={{$professor->id}}>
-                <input type="hidden" name="area" value={{$area}}>
-
-            <div>{!! Form::select('course', $courseSelect,current($courseSelect),['class' => 'btn btn-default dropdown-toggle', 'id'=>'courseSelect'])!!}
-   
-                <button type="submit" class="btn btn-default btn-s">
-                  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                </button>
-            </div>
-            {!! Form::close() !!}
-            @else
-            No se encontraron cursos disponibles para agregar.
-            @endif
-     @foreach($arrayCourses as $course)
-        <li><a><table><tr><td class="col-xs-11">{!!$course['code']."-".$course['section']." ".$course['branch']!!}</td>
-        @if($course['area']==$area)
-        <td class="col-xs-1">
-            {!! Form::open(['route' => ['destroyroute', $course['id'],$area,$professor->id], 'method' => 'delete', 'class'=>'form-inline']) !!}
-                <button type="submit" class="btn btn-default btn-xs">
-                  <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                </button>
-            {!! Form::close() !!}
-        </td>
-        @endif
-        </tr></table></a></li>
-     @endforeach
-</ul>
+                <li class="active"><a>Cursos</a></li>
+                <br>
+                @if($courseSelect!=array() && ($insert_control || $userRole == "Administrador") )
+                    {!! Form::open(['url'=>'schedules'])!!}
+                        <input type="hidden" name="professor" value={{$professor->id}}>
+                        <input type="hidden" name="area" value={{$area}}>
+                        <div>
+                            {!! Form::select('course', $courseSelect,current($courseSelect),['class' => 'btn btn-default dropdown-toggle', 'id'=>'courseSelect'])!!}
+                            <button type="submit" class="btn btn-default btn-s">
+                                <i class="glyphicon glyphicon-plus" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    {!! Form::close() !!}
+                @elseif(!$insert_control && $userRole != "Administrador")
+                    No se encuentra habilitada la función para editar asignaciones.
+                @else
+                    No se encontraron cursos disponibles para agregar.
+                @endif
+                @foreach($arrayCourses as $course)
+                    <li><a><table><tr><td class="col-xs-11">{!!$course['code']."-".$course['section']." ".$course['branch']!!}</td>
+                    @if(($course['area']==$area && $insert_control) || $userRole == "Administrador")
+                        <td class="col-xs-1">
+                            {!! Form::open(['route' => ['destroyroute', $course['id'],$area,$professor->id], 'method' => 'delete', 'class'=>'form-inline']) !!}
+                                <button type="submit" class="btn btn-default btn-xs">
+                                    <i class="glyphicon glyphicon-remove" aria-hidden="true"></i>
+                                </button>
+                            {!! Form::close() !!}
+                        </td>
+                    @endif
+                    </tr></table></a></li>
+                @endforeach
+            </ul>
         </div>
         <div class="col-md-7">  
             <form action="#">
@@ -182,7 +184,29 @@
                   </tr>
                 </table>
             </div>
+                    @if($userRole == "Administrador")
+                            {!! Form::open(['url'=>'schedules/insert_control'])!!}
+                                
+                                <input type="hidden" name="professor" value={{$professor->id}}>
+                                <input type="hidden" name="area" value={{$area}}>
+                                <input type="hidden" name="period" value={{$year."-".$semester}}>
+                                <div class="form-group">
+                                @if($insert_control)
+                                    {!! Form::submit( "Deshabilitar edición de asignaciones para usuarios que no sean administradores", ['class' => 'btn btn-primary form-control']) !!}
+                                @else
+                                    {!! Form::submit( "Habilitar edición de asignaciones para usuarios que no sean administradores", ['class' => 'btn btn-primary form-control']) !!}
+                                @endif
+                                </div>
+
+                            {!! Form::close() !!}
+                    @endif
         </div>
     </div>
-
+@else
+            <form action="#">
+            <h3>Seleccione Profesor a asignar</h3>
+                {!! Form::select('professor', $arrayProfessorss,"",['class' => 'form-control', 'id'=>'professorSelect',"onChange"=>"top.location.href=this.options[this.selectedIndex].value;"])!!}
+                <br>
+            </form> 
+@endif
 @endsection

@@ -12,6 +12,7 @@ use App\Professor;
 use App\Schedule;
 use App\Area;
 use App\Professorsarea;
+use App\Insert_control;
 
 class ScheduleController extends Controller
 {
@@ -22,45 +23,42 @@ class ScheduleController extends Controller
      */
     public function index($semester = null, $year = null)
     {
-
-      $user         = Auth::user()->with('role')->first();
+      $user         = Auth::user();
       $split        = explode(" ", $user->role->name);
       $role_area    = $split[count($split)-1];
-
-
       $areas           = Area::with('professors')->get()->toArray();
+      $profe           = Professor::with('areas')->get()->toArray();
+      $prof_areas = array();
+      foreach($profe as $prof){
+        $prof_areas[$prof['id']] = $prof['areas'];
+      }
       $collection      = collect($areas);
       $area_professors = $collection->keyBy('name')->toArray();
-
       // TODO: Pasar esto a un Helper
       if($semester == null) \Carbon\Carbon::now()->month >= 5 ? $semester = 2 : $semester = 1;
-
       $year == null ? $year = \Carbon\Carbon::now()->year : $year = $year;
 
+      $courses      = Course::with('area')->get()->toArray();
       if($role_area == "Administrador"){
           $professors   = Professor::all()->toArray();
-          $courses      = Course::with('area')->get()->toArray();
           //TODO: Pasar esto a un scope
           $unasigned_courses = Course::with('area')->where('taken',0)->where('semester', $semester)->where('year', $year)->get();
           $asigned_courses   = Course::with('area')->where('taken',1)->where('semester', $semester)->where('year', $year)->get();
       }
-        else{
-          $area = Area::where('name',$role_area)->first();
-          $unasigned_courses = Course::where('taken', 0)->where('area_id', $area->id)->where('semester', $semester)->where('year', $year)->get();
-          $asigned_courses   = Course::where('taken', 1)->where('area_id', $area->id)->where('semester', $semester)->where('year', $year)->get();
-          $professorCourse[$course['id']]="No Asignado";
-        }
-
-        $professorCourse = array();
-        foreach ($courses as $course) {
-          if(Schedule::where('course_id',$course['id'])->first() != null){
-              $professorId = Schedule::where('course_id',$course['id'])->first()->professor_id;
-              $professorCourse[$course['id']]=Professor::where('id',$professorId)->first()->name;
-          }
+      else{
+      $professors   = Area::with('professors')->where('name',$role_area)->get()->toArray()[0]["professors"];
+        $area = Area::where('name',$role_area)->first();
+        $unasigned_courses = Course::where('taken', 0)->where('area_id', $area->id)->where('semester', $semester)->where('year', $year)->get();
+        $asigned_courses   = Course::where('taken', 1)->where('area_id', $area->id)->where('semester', $semester)->where('year', $year)->get();
       }
-
-      return view('schedules.index',compact('area_professors','professors', 'courses', 'professorCourse','unasigned_courses','asigned_courses', 'year', 'semester'));
-
+      $professorCourse = array();
+      foreach ($courses as $course) {
+        if(Schedule::where('course_id',$course['id'])->first() != null){
+            $professorId = Schedule::where('course_id',$course['id'])->first()->professor_id;
+            $professorCourse[$course['id']]=Professor::where('id',$professorId)->first()->name;
+        }
+      }
+      return view('schedules.index',compact('area_professors','prof_areas','professors', 'courses', 'professorCourse','unasigned_courses','asigned_courses', 'year', 'semester'));
     }
 
     /**
@@ -81,6 +79,8 @@ class ScheduleController extends Controller
      */
     public function store(Request $request)
     {
+        $userRole = Auth::user()->role()->first()->name;
+
         $course         = Course::where('id',$request->get('course'))->first();
         $professor      = Professor::where('id',$request->get('professor'))->first();
         $area           = $request->get('area');
@@ -136,9 +136,9 @@ class ScheduleController extends Controller
         foreach($selectedCourseSchedule as $oneSchedule){
             if(in_array($oneSchedule,$hours)){
                 return redirect()->back()->withErrors('El curso seleccionado tiene tope de horario con otro curso ya asignado.')->withInput();;
-            }elseif($days[$oneSchedule[0]]!=$course->branch && $days[$oneSchedule[0]]!=null){
+            }elseif($days[$oneSchedule[0]]!=$course->branch && $days[$oneSchedule[0]]!=null && $userRole != "Administrador"){
                 return redirect()->back()->withErrors('No es posible asignar dos cursos con distintas sedes el mismo día.')->withInput();;
-            }elseif($professorLoad + count($selectedCourseSchedule)*22.5 > $professor->max_load){
+            }elseif($professorLoad + count($selectedCourseSchedule)*22.5 > $professor->max_load && $userRole != "Administrador"){
                 return redirect()->back()->withErrors('Añadir este curso excede la carga máxima del profesor seleccionado.')->withInput();;
             }
         }
@@ -167,26 +167,52 @@ class ScheduleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($date,$area,$professorId)
+    public function show($date,$area,$professorId = null)
     {
+        if($professorId == null){
+
+        }
+        $insert_control = Insert_control::where('period',$date)->first();
+        if($insert_control == null){
+          $insert_control = 0;
+        }
+        else{
+        $insert_control = $insert_control->available;
+        }
+        $userRole = Auth::user()->role()->first()->name;
         $dateExp    = explode("-",$date);
         $year       = $dateExp[0];
         $semester   = $dateExp[1];
-        $professor          = Professor::FindOrFail($professorId);
+        $professor          = Professor::find($professorId);        
+
         $professorFromAreas = Area::where('name', $area)->first()->professors()->get();
-        $professorLoad      = 0;
         $arrayProfessors    = array();
+        
+        foreach($professorFromAreas as $professorFromArea){
+            $arrayProfessors[$professorFromArea->id]  = $professorFromArea->name;
+        }
+        
+        if(!isset($professor)){
+          $status = 1;
+          $arrayProfessorss=$arrayProfessors;
+          $arrayProfessorss[""]="";
+          return view('schedules.show', compact("status","year","semester","arrayProfessorss"));
+        }
+
+        $todasAreas         = Area::all()->toArray();
+        $arrayAreas         = array();
+        foreach($todasAreas as $unArea){
+          $arrayAreas[$unArea['id']] = $unArea['name'];
+        }
+        $professorLoad      = 0;
         $arrayCourses       = array();
 
-        $areaCourses        = Course::where('area',$area)->where('year',$year)->where('semester',$semester)->get();
+        $areaCourses        = Course::join('areas', 'areas.id', '=', 'courses.area_id')->where('areas.name',$area)->where('courses.year',$year)->where('courses.semester',$semester)->get();
         $courseSelect       = array();
         foreach($areaCourses as $oneCourse){
             if(count($oneCourse->schedule()->groupBy('professor_id')->get()) == 0){
                 $courseSelect[$oneCourse->id] = $oneCourse->code."-".$oneCourse->section."-".$oneCourse->year."-".$oneCourse->semester." ".$oneCourse->branch." (".$oneCourse->schedule.")";
             }
-        }
-        foreach($professorFromAreas as $professorFromArea){
-            $arrayProfessors[$professorFromArea->id]  = $professorFromArea->name;
         }
         $schedules =    Schedule::join('courses', 'courses.id', '=', 'schedules.course_id')
                         ->where('schedules.professor_id',$professorId)
@@ -197,7 +223,7 @@ class ScheduleController extends Controller
             $course                 = array();
             $code                   = $schedule->course()->first()->code;
             $course['name']         = $schedule->course()->first()->name;
-            $course['area']         = $schedule->course()->first()->area;
+            $course['area']         = $arrayAreas[$schedule->course()->first()->area_id];
             $course['branch']       = $schedule->course()->first()->branch;
             $course['section']      = $schedule->course()->first()->section;
             $course['semester']     = $schedule->course()->first()->semester;
@@ -231,7 +257,7 @@ class ScheduleController extends Controller
         $previewsDate = $previewsYear."-".$nextSemester;
         $urlAnterior = "schedules/$previewsDate/$area/$professor->id";
         $urlSiguiente = "schedules/$nextDate/$area/$professor->id";
-        return view('schedules.show', compact('year','semester','urlAnterior','urlSiguiente','professor','courseSelect','arrayCourses','arrayProfessors','array','area','professorLoad'));
+        return view('schedules.show', compact('year','semester','urlAnterior','urlSiguiente','professor','courseSelect','arrayCourses','arrayProfessors','array','area','professorLoad', 'userRole', 'insert_control' ));
     }
 
     /**
@@ -281,4 +307,26 @@ class ScheduleController extends Controller
         return redirect("schedules/$course->year-$course->semester/$area/$professor");
     }
 
+
+    public function insert_control(Request $request)
+    {
+        $professor      = Professor::where('id',$request->get('professor'))->first();
+        $area           = $request->get('area');
+        $period         = $request->get('period');
+        //dd($period);
+        $insert_control = Insert_control::where('period', $period)->first();
+        if($insert_control != null){    
+          $record = $insert_control;
+          $record->available = !$record->available;
+          $record->save();
+        }
+        else{
+          $record = new Insert_control;
+          $record->period = $period;
+          $record->available = 1;
+          $record->save();
+        }
+
+        return redirect("schedules/$period/$area/$professor->id");
+    }
 }
