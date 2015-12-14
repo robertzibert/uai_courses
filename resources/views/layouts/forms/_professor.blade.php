@@ -16,7 +16,7 @@
 
 <div class="form-group col-md-12 ">
 	{!! Form::label('sede_origen','Sede de Origen') !!}
-	{!! Form::select('sede_origen', array('santiago' => 'Santiago', 'viña' => 'Viña del Mar'),  null, ['class' => 'form-control']);!!}
+	{!! Form::select('sede_origen', array('Santiago' => 'Santiago', 'Viña del Mar' => 'Viña del Mar'),  null, ['class' => 'form-control']);!!}
 </div>
 
 <div class="form-group col-md-6">

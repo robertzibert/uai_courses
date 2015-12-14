@@ -17,12 +17,11 @@
       <td>{{$course->schedule}}</td>
       <td><!-- Single button -->
         <div class="btn-group">
-          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Asignar <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu">
-
-          </ul>
+            <a href={{ URL::to("schedules/".$course->year."-".$course->semester."/".$course->area()->first()->name."/index") }}>
+                <button class="btn btn-default">
+                  Asignar
+                </button>
+            </a>
         </div>
       </td>
     </tr>

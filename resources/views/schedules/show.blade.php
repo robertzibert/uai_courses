@@ -9,6 +9,7 @@
 @endsection
 
 @section('content')
+@if(!isset($status))
     <style type="text/css">
     @foreach($arrayCourses as $course)
         @foreach($course['schedule'] as $horario)
@@ -21,8 +22,8 @@
     @if($errors->has())
        @foreach ($errors->all() as $error)
         <div class="alert alert-danger" role="alert">
-            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-            <span class="sr-only">Error:</span>
+            <i class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></i>
+            <i class="sr-only">Error:</i>
             Error: {{ $error }}
         </div>
       @endforeach
@@ -32,11 +33,11 @@
         <div class="col-md-4">
             <a href="{{ URL::to($urlAnterior) }}">
             <button class="btn btn-default btn-xs">
-                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>Semestre anterior
+                <i class="glyphicon glyphicon-chevron-left" aria-hidden="true"></i>Semestre anterior
             </button>
             <a href="{{ URL::to($urlSiguiente) }}">
                 <button class="btn btn-default btn-xs">
-                  Siguiente Semestre<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                  Siguiente Semestre<i class="glyphicon glyphicon-chevron-right" aria-hidden="true"></i>
                 </button>
             </a>
             <div class="form-group">
@@ -62,7 +63,7 @@
                         <div>
                             {!! Form::select('course', $courseSelect,current($courseSelect),['class' => 'btn btn-default dropdown-toggle', 'id'=>'courseSelect'])!!}
                             <button type="submit" class="btn btn-default btn-s">
-                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                <i class="glyphicon glyphicon-plus" aria-hidden="true"></i>
                             </button>
                         </div>
                     {!! Form::close() !!}
@@ -77,7 +78,7 @@
                         <td class="col-xs-1">
                             {!! Form::open(['route' => ['destroyroute', $course['id'],$area,$professor->id], 'method' => 'delete', 'class'=>'form-inline']) !!}
                                 <button type="submit" class="btn btn-default btn-xs">
-                                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                    <i class="glyphicon glyphicon-remove" aria-hidden="true"></i>
                                 </button>
                             {!! Form::close() !!}
                         </td>
@@ -201,5 +202,11 @@
                     @endif
         </div>
     </div>
-
+@else
+            <form action="#">
+            <h3>Seleccione Profesor a asignar</h3>
+                {!! Form::select('professor', $arrayProfessorss,"",['class' => 'form-control', 'id'=>'professorSelect',"onChange"=>"top.location.href=this.options[this.selectedIndex].value;"])!!}
+                <br>
+            </form> 
+@endif
 @endsection

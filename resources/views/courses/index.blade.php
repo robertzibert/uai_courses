@@ -9,7 +9,7 @@
 		<th>Sección</th>
 		<th>Semestre</th>
 		<th>Año</th>
-		<th>Sucursal</th>
+		<th>Sede</th>
 		<th>Horario</th>
 
 		@if(Auth::user()->role()->first()->name == "Administrador")
