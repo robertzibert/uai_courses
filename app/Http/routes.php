@@ -28,13 +28,14 @@ Route::group(['middleware' => 'auth'], function () {
   Route::resource('areas','AreaController');
   Route::get('/', ['uses' =>'ScheduleController@index']);
 
+  Route::get('dashboard/{semester?}/{year?}','ScheduleController@index');
+
 
 });
 
 Route::post('professors/import',['as' => 'professors.import', 'uses' =>'ProfessorController@import' ]);
 Route::post('courses/import',['as' => 'courses.import', 'uses' =>'CourseController@import' ]);
 
-Route::get('dashboard/{semester?}/{year?}','ScheduleController@index');
 
 Route::get('/schedules/create/{area}', ['uses' =>'ScheduleController@create']);
 Route::delete('schedules/delete/{id}/{area}/{professor}',array('uses' => 'ScheduleController@destroy', 'as' => 'destroyroute'));

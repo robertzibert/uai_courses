@@ -88,8 +88,13 @@ class ProfessorController extends Controller {
 	 */
 	public function update(Request $request, $id)
 	{
+		$areas     = $request->get('area');
+		
 		$professor = Professor::findOrFail($id);
-		$professor->update($request->all());
+
+		$professor->update($request->except('area'));
+
+		$professor->areas()->sync($areas);
 
 		return redirect()->route('professors.index')->with('message', 'Item updated successfully.');
 	}
@@ -130,7 +135,7 @@ class ProfessorController extends Controller {
 									$professor->min_load    = $result->carga_docente_minima;
 									$professor->max_load    = $result->carga_docente_maxima;
 									$professor->save();
-									
+
 
 									//TODO: Pasar esto a el modelo o a una query class
 									$areas = explode(',', $result->areas);

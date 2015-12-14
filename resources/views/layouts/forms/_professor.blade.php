@@ -38,10 +38,12 @@
 	@foreach($areas as $area)
 		@if(isset($professor) && in_array($area->id, $professor->getAreas()))
 			<label class="btn btn-primary active">
+			{!! Form::checkbox('area[]', $area->id, true) !!}
 		@else
 			<label class="btn btn-primary">
-		@endif
 			{!! Form::checkbox('area[]', $area->id) !!}
+		@endif
+
 			<span class="glyphicon glyphicon-ok"></span>
 			{{$area->complete_name}}
 			</label>
