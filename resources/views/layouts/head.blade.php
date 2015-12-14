@@ -22,6 +22,7 @@
 								<a href="{{ url('users') }}">Usuarios</a>
 							</li>
 						@endif
+
 						</ul>
 						<ul class="nav navbar-nav navbar-right">
 							<li class="dropdown">

@@ -10,7 +10,7 @@
   </thead>
   <tbody>
     @foreach($professors as $professor)
-    @if(($id == 'dataTable2') || ($professor['type'] == 'Hora' && $id == 'dataTable3')|| ($professor['type'] == 'Instructor' && $id == 'dataTable4')|| ($professor['type'] == 'Regular' && $id == 'dataTable5')|| ($professor['type'] == 'Administrativo-docente' && $id == 'dataTable6'))
+    @if(($id == 'dataTable2') || ($professor['type'] == 'Hora' && $id == 'dataTable3')|| ($professor['type'] == 'Instructor' && $id == 'dataTable5')|| ($professor['type'] == 'Regular' && $id == 'dataTable6')|| ($professor['type'] == 'Administrativo-docente' && $id == 'dataTable4'))
     <tr>
       <td>{{$professor['name']}}</td>
       <td>{{$professor['rut']}}</td>
@@ -19,11 +19,16 @@
       <td>{{$professor['max_load']}}</td>
       <td>{{$professor['current_load']}}</td>
       <td><!-- Single button -->
-<div class="btn-group">
-  <button type="button" class="btn btn-default">
-    Asignar Curso
-  </button>
-</div></td>
+        <div class="btn-group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Asignar <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li><a href="#">Rely</a></li>
+            <li><a href="#">Carols</a></li>
+          </ul>
+        </div>
+      </td>
     </tr>
     @endif
     @endforeach
