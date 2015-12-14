@@ -28,6 +28,10 @@ class ScheduleController extends Controller
       $role_area    = $split[count($split)-1];
       $areas           = Area::with('professors')->get()->toArray();
       $profe           = Professor::with('areas')->get()->toArray();
+      $prof_areas = array();
+      foreach($profe as $prof){
+        $prof_areas[$prof['id']] = $prof['areas'];
+      }
       $collection      = collect($areas);
       $area_professors = $collection->keyBy('name')->toArray();
       // TODO: Pasar esto a un Helper
@@ -54,7 +58,7 @@ class ScheduleController extends Controller
             $professorCourse[$course['id']]=Professor::where('id',$professorId)->first()->name;
         }
       }
-      return view('schedules.index',compact('area_professors','professors', 'courses', 'professorCourse','unasigned_courses','asigned_courses', 'year', 'semester'));
+      return view('schedules.index',compact('area_professors','prof_areas','professors', 'courses', 'professorCourse','unasigned_courses','asigned_courses', 'year', 'semester'));
     }
 
     /**

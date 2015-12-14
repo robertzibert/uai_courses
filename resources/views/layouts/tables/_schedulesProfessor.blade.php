@@ -24,8 +24,9 @@
             Asignar <span class="caret"></span>
           </button>
           <ul class="dropdown-menu">
-            <li><a href="#">Rely</a></li>
-            <li><a href="#">Carols</a></li>
+            @foreach($prof_areas[$professor['id']] as $ar)
+            <li><a href={{ URL::to("schedules/".$year."-".$semester."/".$ar['name']."/".$professor['id']) }}>{{$ar['name']}}</a></li>
+            @endforeach
           </ul>
         </div>
       </td>
