@@ -207,7 +207,8 @@ class ScheduleController extends Controller
         $professorLoad      = 0;
         $arrayCourses       = array();
 
-        $areaCourses        = Course::join('areas', 'areas.id', '=', 'courses.area_id')->where('areas.name',$area)->where('courses.year',$year)->where('courses.semester',$semester)->get();
+        $areaCourses        = Course::join('areas', 'areas.id', '=', 'courses.area_id')->where('areas.name',$area)->where('courses.year',$year)->where('courses.semester',$semester)->select('courses.id', 'courses.year', 'courses.semester', 'areas.name', 'courses.branch', 'courses.section', 'courses.code', 'courses.schedule')->get();
+
         $courseSelect       = array();
         foreach($areaCourses as $oneCourse){
             if(count($oneCourse->schedule()->groupBy('professor_id')->get()) == 0){
