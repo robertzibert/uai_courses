@@ -1,27 +1,47 @@
-## Laravel PHP Framework
+Administrador de Cursos y Profesores UAI
+===================
 
-[![Build Status](https://travis-ci.org/laravel/framework.svg)](https://travis-ci.org/laravel/framework)
-[![Total Downloads](https://poser.pugx.org/laravel/framework/d/total.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Stable Version](https://poser.pugx.org/laravel/framework/v/stable.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Unstable Version](https://poser.pugx.org/laravel/framework/v/unstable.svg)](https://packagist.org/packages/laravel/framework)
-[![License](https://poser.pugx.org/laravel/framework/license.svg)](https://packagist.org/packages/laravel/framework)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as authentication, routing, sessions, queueing, and caching.
+Esta herramienta sirve para poder generar horarios de profesores de forma dinámica y ordenada. También guarda el historial de asignaciones de cursos pasados. Permite que tanto el administrador y el coordinador de un área particular puedan 
 
-Laravel is accessible, yet powerful, providing powerful tools needed for large, robust applications. A superb inversion of control container, expressive migration system, and tightly integrated unit testing support give you the tools you need to build any application with which you are tasked.
+----------
 
-## Official Documentation
 
-Documentation for the framework can be found on the [Laravel website](http://laravel.com/docs).
+Requisitos de Sistema
+-------------
 
-## Contributing
+Nuestra aplicación usa principalmente Laravel 5.1 y Mysql para la base de datos.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](http://laravel.com/docs/contributions).
+- PHP >= 5.6
+- Mysql 
+- Composer
+- Apache
 
-## Security Vulnerabilities
+ 
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
 
-### License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
+Instalación
+-------------------
+
+Primero hacer un pull del código en la carpeta `{DIR}` luego una vez en `{DIR}` 
+
+1. Preparar el archivo para las variables de ambiente
+	
+		mv .env.example .env 
+		
+2. Luego generar una llave para la aplicación y colocarla en `APP_KEY` del archivo .env 
+	
+		php artisan key:generate
+		
+3. Instalar los packages que usa la aplicación
+
+		composer install
+
+4. Una vez configurados los parámetros dentro de la base de datos en el archivo .env migrar y sedear la base de datos:
+	
+		php artisan migrate --seed
+		
+5. Para probar que todo esté correctamente configurado	
+
+		php artisan migrate --seed
