@@ -45,3 +45,36 @@ Primero hacer un pull del código en la carpeta `{DIR}` luego una vez en `{DIR}`
 5. Para probar que todo esté correctamente configurado	
 
 		php artisan migrate --seed
+		
+
+Configuración en Ubuntu
+-------------------
+
+1. Habilitar Mcrypt
+	
+		sudo php5enmod mcrypt
+
+2. Habilitar el modulo rewrite ya que Laravel hace uso de el para el manejo de las rutas
+
+		sudo a2enmod rewrite 
+
+3. Hacer pública la carpeta storage dentro del proyecto
+
+		sudo chmod -R 777 app/storage
+
+4. El archivo de configuración de apache que estén usando para asignarle a lravel su puerto debe tener la siguiente configuración
+
+		DocumentRoot /var/www/laravel/public
+		<Directory /var/www/laravel/public>
+ 			Options Indexes FollowSymLinks MultiViews
+			AllowOverride All
+ 			Order allow,deny
+ 			allow from all
+		</Directory>
+
+	Observación: /var/www/laravel está haciendo referencia a la ruta de destino en donde se haya dejado el proyecto
+
+5. Reiniciar apache:
+
+		sudo service apache2 restart
+
